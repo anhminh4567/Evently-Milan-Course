@@ -7,9 +7,9 @@ using Microsoft.AspNetCore.Routing;
 
 namespace Evently.Modules.Events.Presentation.Events;
 
-internal static class RescheduleEvent
+internal class RescheduleEvent : IEndpoint
 {
-	public static void MapEndpoint(IEndpointRouteBuilder app)
+	public void MapEndpoint(IEndpointRouteBuilder app)
 	{
 		app.MapPut("events/{id}/reschedule", async (string id, RescheduleEventRequest request, ISender sender) =>
 		{

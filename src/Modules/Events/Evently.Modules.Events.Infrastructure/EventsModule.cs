@@ -1,6 +1,7 @@
 ﻿using System.Reflection;
 using Evently.Common.Application.Clock;
 using Evently.Common.Application.Data;
+using Evently.Common.Presentation.Endpoints;
 using Evently.Modules.Events.Application;
 using Evently.Modules.Events.Application.Abstractions;
 using Evently.Modules.Events.Application.Events;
@@ -28,17 +29,29 @@ namespace Evently.Modules.Events.Infrastructure;
 
 public static class EventsModule
 {
-    public static void MapEndpoints(IEndpointRouteBuilder app)
-    {
-        EventEndpoints.MapEndpoints(app);
-        TicketTypeEndpoints.MapEndpoints(app);
-        CategoryEndpoints.MapEndpoints(app);
-    }
+    ///////////////////////////
+    // this method is no longer needed
+    // replaced by automatci endpoint registration through assembly reference
+    // it is registerd in Evently.Modules.Events.Infrastructure
+    // the method do this is implemented in Evently.Common.Presentation
+    ///////////////////////////
+
+    //public static void MapEndpoints(IEndpointRouteBuilder app)
+    //{
+    //    EventEndpoints.MapEndpoints(app);
+    //    TicketTypeEndpoints.MapEndpoints(app);
+     
+    //    CategoryEndpoints.MapEndpoints(app);
+    //}
+
     public static IServiceCollection AddEventsModule(
         this IServiceCollection services,
         IConfiguration configuration)
     {
-
+        // this is automatic enpoint registration, very cool stuff, check the implementation
+        // currently this is registering all endpotn as transient service, then later register
+        services.AddEndpoints(Evently.Modules.Events.Presentation.MetaClass.Assembly);
+        //
         services.AddInfrastructure(configuration);
         return services;
     }

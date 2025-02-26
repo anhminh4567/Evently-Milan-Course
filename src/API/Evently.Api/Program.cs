@@ -1,8 +1,8 @@
 using Evently.Api.Extensions;
-using Evently.Api.Middleware;
 using Evently.Api.Middlewares;
 using Evently.Common.Application;
 using Evently.Common.Infrastructure;
+using Evently.Common.Presentation.Endpoints;
 using Evently.Modules.Events.Infrastructure;
 using Serilog;
 
@@ -47,8 +47,18 @@ if (app.Environment.IsDevelopment())
 app.UseSerilogRequestLogging();
 //app.UseExceptionHandler("/error");
 app.UseMiddleware<CustomExceptionHandlerMiddleware>();
-EventsModule.MapEndpoints(app);
 
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// ||                                                                                                             ||
+// ||   AUTO MATIC REGISTRATION ENDPOINT                                                                          ||
+// ||   REQUIRE AddEndpoints() in ------ Evently.Common.Presentation ------ to be called in Evently.Modules.<>.Presentation     ||
+// ||                                                                                                             ||
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//** Old Registration
+//EventsModule.MapEndpoints(app);
+// ** new automatic stuff
+// from ----- Evently.Common.Presentation.Endpoints ------
+app.MapEndpoints();
 
 app.Run();
 
