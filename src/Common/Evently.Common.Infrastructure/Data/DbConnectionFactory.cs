@@ -4,20 +4,20 @@ using System.Data.Common;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Evently.Modules.Events.Application.Abstractions;
-using Evently.Modules.Events.Infrastructure.Database;
+using Evently.Common.Application.Data;
+//using Evently.Modules.Events.Infrastructure.Database;
 using Microsoft.EntityFrameworkCore;
 using Npgsql;
 
-namespace Evently.Modules.Events.Infrastructure.Data;
+namespace Evently.Common.Infrastructure.Data;
 internal class DbConnectionFactory : IDbConnectionFactory
 {
-    private readonly EventsDbContext _context;
+    //private readonly EventsDbContext _context;
     private readonly NpgsqlDataSource _dataSource;
 
-    public DbConnectionFactory(EventsDbContext context, NpgsqlDataSource dataSource)
+    public DbConnectionFactory( NpgsqlDataSource dataSource)//EventsDbContext context,
     {
-        _context = context;
+        //_context = context;
         _dataSource = dataSource;
     }
     // we inject the datasource from singleton intead of using _context as it is scoped

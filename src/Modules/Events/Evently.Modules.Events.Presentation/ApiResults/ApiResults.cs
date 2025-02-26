@@ -1,5 +1,4 @@
-﻿using Evently.Modules.Events.Domain.Abstractions;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
 
 namespace Evently.Modules.Events.Presentation.ApiResults;
 

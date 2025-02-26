@@ -4,16 +4,16 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
-using Evently.Modules.Events.Domain.Abstractions;
+using Evently.Common.Domain;
 using Microsoft.EntityFrameworkCore;
 
 namespace Evently.Modules.Events.Infrastructure.Database;
-internal class BaseRepository<T> : IBaseRepository<T> where T : class
+public class BaseRepository<T> : IBaseRepository<T> where T : class
 {
-	protected readonly EventsDbContext _dbContext;
+	protected readonly DbContext _dbContext;
 	protected readonly DbSet<T> _set;
 
-	public BaseRepository(EventsDbContext dbContext)
+	public BaseRepository(DbContext dbContext)
 	{
 		_dbContext = dbContext;
 		_set = _dbContext.Set<T>();

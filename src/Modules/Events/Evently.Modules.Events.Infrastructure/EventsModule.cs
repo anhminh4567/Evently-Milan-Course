@@ -1,14 +1,13 @@
 ﻿using System.Reflection;
+using Evently.Common.Application.Clock;
+using Evently.Common.Application.Data;
 using Evently.Modules.Events.Application;
 using Evently.Modules.Events.Application.Abstractions;
-using Evently.Modules.Events.Application.Abstractions.Clock;
 using Evently.Modules.Events.Application.Events;
 using Evently.Modules.Events.Domain.Categories;
 using Evently.Modules.Events.Domain.Events;
 using Evently.Modules.Events.Domain.TicketTypes;
 using Evently.Modules.Events.Infrastructure.Categories;
-using Evently.Modules.Events.Infrastructure.Clock;
-using Evently.Modules.Events.Infrastructure.Data;
 using Evently.Modules.Events.Infrastructure.Database;
 using Evently.Modules.Events.Infrastructure.Events;
 using Evently.Modules.Events.Infrastructure.TicketTypes;
@@ -39,11 +38,7 @@ public static class EventsModule
         this IServiceCollection services,
         IConfiguration configuration)
     {
-        services.AddMediatR((config) =>
-        {
-            config.RegisterServicesFromAssembly(MetaClass.EventApplicationAssembly);
-        });
-        services.AddValidatorsFromAssembly(MetaClass.EventApplicationAssembly, includeInternalTypes: true);
+
         services.AddInfrastructure(configuration);
         return services;
     }
@@ -52,8 +47,6 @@ public static class EventsModule
        IConfiguration configuration)
     {
         string databaseConnectionString = configuration.GetConnectionString("Database")!;
-        NpgsqlDataSource dataSource = new NpgsqlDataSourceBuilder(databaseConnectionString).Build();
-        services.AddSingleton(dataSource);
         services.AddDbContext<EventsDbContext>(options =>
             options
                 .UseNpgsql(
@@ -62,9 +55,6 @@ public static class EventsModule
                         .MigrationsHistoryTable(HistoryRepository.DefaultTableName, Schemas.Events))
                 );
         services.AddScoped<IUnitOfWork>(sp => sp.GetRequiredService<EventsDbContext>());
-        services.AddScoped<IDbConnectionFactory, DbConnectionFactory>();
-		services.TryAddSingleton<IDateTimeProvider, DateTimeProvider>();
-
 
 		services.AddScoped<IEventRepository, EventRepository>();
 		services.AddScoped<ITicketTypeRepository, TicketTypeRepository>();

@@ -1,4 +1,5 @@
-﻿using System.Reflection;
+﻿global using Evently.Common.Domain; 
+using System.Reflection;
 
 namespace Evently.Modules.Events.Presentation;
 

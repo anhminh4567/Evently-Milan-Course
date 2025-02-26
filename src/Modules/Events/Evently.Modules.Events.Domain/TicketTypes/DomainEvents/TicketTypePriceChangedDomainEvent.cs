@@ -1,5 +1,4 @@
-﻿using Evently.Modules.Events.Domain.Abstractions;
-
+﻿using Evently.Common.Domain;
 namespace Evently.Modules.Events.Domain.TicketTypes.DomainEvents;
 
 public sealed record TicketTypePriceChangedDomainEvent(string ticketTypeId, decimal price) : DomainEvent

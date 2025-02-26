@@ -1,4 +1,4 @@
-﻿using Evently.Modules.Events.Domain.Abstractions;
+﻿using Evently.Common.Domain;
 using Evently.Modules.Events.Domain.Categories;
 using Evently.Modules.Events.Domain.Events.DomainEvents;
 using Evently.Modules.Events.Domain.Events.Enums;

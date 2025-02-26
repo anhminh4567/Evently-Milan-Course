@@ -10,12 +10,13 @@ namespace Evently.Modules.Events.Infrastructure.Events;
 
 internal class EventRepository : BaseRepository<Event>, IEventRepository
 {
+    private EventsDbContext _context => _dbContext as EventsDbContext;
     public EventRepository(EventsDbContext dbContext) : base(dbContext)
     {
     }
 
     public void Insert(Event @event)
     {
-        _dbContext.Events.Add(@event);
+        _context.Events.Add(@event);
     }
 }

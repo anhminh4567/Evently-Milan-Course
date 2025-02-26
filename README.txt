@@ -18,12 +18,13 @@ CURRENT GENERAL LAYOUT
 																|
 							----------------------------------------------------------------------------------------
 							|					
-					Event-Module
-				Infrastructure
-					|
-	----------------|
-	|				|
-Application <--- Presentation 
-	|
-  Domain
+						Event-Module
+							||
+					Infrastructure
+							|
+			----------------|
+			|				|
+		Application <--- Presentation 
+			|
+		  Domain
 				
