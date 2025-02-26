@@ -15,6 +15,9 @@ builder.Services.AddSwaggerGen(opt =>
 
 builder.Services.AddApplication([Evently.Modules.Events.Application.MetaClass.EventApplicationAssembly]);
 builder.Services.AddInfrastructure(builder.Configuration);
+// add appsettings of modules
+builder.Configuration.AddModulesAppsettings(["events"]);
+
 builder.Services.AddEventsModule(builder.Configuration);
 
 WebApplication app = builder.Build();
