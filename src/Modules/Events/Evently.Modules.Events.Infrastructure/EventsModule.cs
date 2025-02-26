@@ -21,13 +21,13 @@ using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Npgsql;
 
 namespace Evently.Modules.Events.Infrastructure;
 
 public static class EventsModule
 {
-
     public static void MapEndpoints(IEndpointRouteBuilder app)
     {
         EventEndpoints.MapEndpoints(app);

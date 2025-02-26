@@ -25,14 +25,14 @@ internal sealed class GetTicketTypesQueryHandler : IQueryHandler<GetTicketTypesQ
         const string sql =
             $"""
              SELECT
-                 id AS {nameof(TicketTypeResponse.Id)},
-                 event_id AS {nameof(TicketTypeResponse.EventId)},
-                 name AS {nameof(TicketTypeResponse.Name)},
-                 price AS {nameof(TicketTypeResponse.Price)},
-                 currency AS {nameof(TicketTypeResponse.Currency)},
-                 quantity AS {nameof(TicketTypeResponse.Quantity)}
-             FROM events.ticket_types
-             WHERE event_id = @EventId
+                 "Id" AS {nameof(TicketTypeResponse.Id)},
+                 "EventId" AS {nameof(TicketTypeResponse.EventId)},
+                 "Name" AS {nameof(TicketTypeResponse.Name)},
+                 "Price" AS {nameof(TicketTypeResponse.Price)},
+                 "Currency" AS {nameof(TicketTypeResponse.Currency)},
+                 "Quantity" AS {nameof(TicketTypeResponse.Quantity)}
+             FROM events."TicketTypes"
+             WHERE "EventId" = @EventId
              """;
 
         List<TicketTypeResponse> ticketTypes =

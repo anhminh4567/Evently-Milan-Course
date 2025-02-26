@@ -13,6 +13,6 @@ internal sealed class EventConfiguration : IEntityTypeConfiguration<Event>
         builder.HasOne(e => e.Category)
             .WithMany()
             .HasForeignKey(x => x.CategoryId);
-        builder.Navigation(e => e.Category );
+        //builder.Navigation(e => e.Category );
     }
 }

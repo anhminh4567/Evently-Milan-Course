@@ -1,6 +1,5 @@
-﻿
-using Evently.Common.Domain;
-namespace Evently.Modules.Events.Presentation.ApiResults;
+﻿using Evently.Common.Domain;
+namespace Evently.Common.Presentation.ApiResults;
 
 public static class ResultExtensions
 {

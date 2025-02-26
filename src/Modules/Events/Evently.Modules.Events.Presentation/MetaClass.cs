@@ -1,4 +1,7 @@
-﻿global using Evently.Common.Domain; 
+﻿global using Evently.Common.Domain;
+global using Evently.Common.Presentation.ApiResults;
+global using Evently.Common.Presentation.Endpoints;
+
 using System.Reflection;
 
 namespace Evently.Modules.Events.Presentation;

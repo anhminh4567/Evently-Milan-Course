@@ -3,8 +3,13 @@
     "Docker Compose": {
       "commandName": "DockerCompose",
       "commandVersion": "1.0",
+      "composeLaunchAction": "LaunchBrowser",
+      "composeLaunchServiceName": "evently.api",
+      "composeLaunchUrl": "{Scheme}://localhost:{ServicePort}/swagger",
       "serviceActions": {
-        "evently.api": "StartDebugging"
+        "evently.api": "StartDebugging",
+        "evently.database": "StartWithoutDebugging",
+        "evently.seq": "StartWithoutDebugging"
       }
     }
   }

@@ -1,19 +1,6 @@
 version: '3.9'
 
 services:
-  evently.api:
-    image: ${DOCKER_REGISTRY-}eventlyapi
-    container_name: Evently.Api
-    build:
-      context: .
-      dockerfile: src/API/Evently.Api/Dockerfile
-    depends_on:
-      - evently.database
-    ports:
-      - 5000:8080
-      - 5001:8081
-
-
   evently.database:
     image: postgres:latest
     container_name: Evently.Database
@@ -25,3 +12,32 @@ services:
       - ./.containers/db:/var/lib/postgresql/data
     ports: # 5432 is used by local machine postgres
       - 5400:5432
+
+  evently.seq:
+    image: datalust/seq:latest
+    container_name: Evently.Seq
+    environment:
+      - ACCEPT_EULA=Y
+    ports:
+      - 5341:5341 # default port where log is streamed to 
+      - 8222:80 # for web UI
+  evently.redis:
+    image: redis:latest
+    container_name: Evently.Redis
+    restart: always
+    ports:
+      - 6300:6379
+
+
+  evently.api:
+    image: ${DOCKER_REGISTRY-}eventlyapi
+    container_name: Evently.Api
+    build:
+      context: .
+      dockerfile: src/API/Evently.Api/Dockerfile
+    depends_on:
+      - evently.database
+      - evently.seq
+    ports:
+      - 5000:8080
+      - 5001:8081

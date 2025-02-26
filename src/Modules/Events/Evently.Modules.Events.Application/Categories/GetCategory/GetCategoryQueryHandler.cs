@@ -24,11 +24,11 @@ internal sealed class GetCategoryQueryHandler
         const string sql =
             $"""
              SELECT
-                 id AS {nameof(CategoryResponse.Id)},
-                 name AS {nameof(CategoryResponse.Name)},
-                 is_archived AS {nameof(CategoryResponse.IsArchived)}
-             FROM events.categories
-             WHERE id = @CategoryId
+                 "Id" AS {nameof(CategoryResponse.Id)},
+                 "Name" AS {nameof(CategoryResponse.Name)},
+                 "IsArchived" AS {nameof(CategoryResponse.IsArchived)}
+             FROM events."Categories"
+             WHERE "Id" = @CategoryId
              """;
 
         CategoryResponse? category = await connection.QuerySingleOrDefaultAsync<CategoryResponse>(sql, request);
