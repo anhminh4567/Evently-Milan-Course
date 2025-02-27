@@ -1,10 +1,13 @@
-﻿using System.Reflection;
+﻿using System.Data.Common;
+using System.Reflection;
+using System.Threading;
 using Evently.Common.Application.Data;
 using Evently.Modules.Events.Application.Abstractions;
 using Evently.Modules.Events.Domain.Categories;
 using Evently.Modules.Events.Domain.Events;
 using Evently.Modules.Events.Domain.TicketTypes;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage;
 
 namespace Evently.Modules.Events.Infrastructure.Database;
 
@@ -32,9 +35,14 @@ public sealed class EventsDbContext : DbContext , IUnitOfWork
 		modelBuilder.HasDefaultSchema(Schemas.Events);
         modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
 	}
-	public Task BeginTransactionAsync(CancellationToken tokeen = default)
+	public async Task<DbTransaction> BeginTransactionAsync(CancellationToken tokeen = default)
     {
-        return Database.BeginTransactionAsync(tokeen);
+        if (Database.CurrentTransaction is not null)
+        {
+            await Database.CurrentTransaction.DisposeAsync();
+        }
+
+        return (await Database.BeginTransactionAsync(tokeen)).GetDbTransaction();
     }
 
     public Task CommitAsync(CancellationToken token = default)

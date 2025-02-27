@@ -1,8 +1,10 @@
-﻿using Evently.Common.Application.Data;
+﻿using System.Data.Common;
+using Evently.Common.Application.Data;
 using Evently.Modules.Users.Application.Abstractions.Data;
 using Evently.Modules.Users.Domain.Users;
 using Evently.Modules.Users.Infrastructure.Users;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage;
 
 namespace Evently.Modules.Users.Infrastructure.Database;
 
@@ -19,9 +21,14 @@ public sealed class UsersDbContext : DbContext, IUnitOfWork
         base.OnConfiguring(optionsBuilder);
     }
 
-    public Task BeginTransactionAsync(CancellationToken tokeen = default)
+    public async Task<DbTransaction> BeginTransactionAsync(CancellationToken tokeen = default)
     {
-        return Database.BeginTransactionAsync(tokeen);
+        if (Database.CurrentTransaction is not null)
+        {
+            await Database.CurrentTransaction.DisposeAsync();
+        }
+
+        return (await Database.BeginTransactionAsync(tokeen)).GetDbTransaction();
     }
 
     public Task CommitAsync(CancellationToken token = default)

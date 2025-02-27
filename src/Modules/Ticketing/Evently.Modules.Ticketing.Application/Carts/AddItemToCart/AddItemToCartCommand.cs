@@ -13,20 +13,23 @@ internal sealed class AddItemToCartCommandHandler
     : ICommandHandler<AddItemToCartCommand>
 {
     private readonly CartService _cartService;
-    private readonly IUserApi _userApi;
+    private readonly ICustomerRepository _customerRepository;
     private readonly IEventsApi _eventsApi;
 
-    public AddItemToCartCommandHandler(CartService cartService, IUserApi userApi, IEventsApi eventsApi)
+    public AddItemToCartCommandHandler(CartService cartService, ICustomerRepository customerRepository, IEventsApi eventsApi)
     {
         _cartService = cartService;
-        _userApi = userApi;
+        _customerRepository = customerRepository;
         _eventsApi = eventsApi;
     }
 
     public async Task<Result> Handle(AddItemToCartCommand request, CancellationToken cancellationToken)
     {
         // 1. Get customer
-        UserResponse? customer = await _userApi.GetAsync(request.CustomerId, cancellationToken);
+        // this useed to use IUserApi
+        // but since we duplicate data when user is registered in User.Module
+        // we dont have to call it again, just get from repository from local db
+        Customer? customer = await _customerRepository.GetAsync(request.CustomerId, cancellationToken);
         if (customer is null)
             return Result.Failure(CustomerErrors.NotFound(request.CustomerId));
 
