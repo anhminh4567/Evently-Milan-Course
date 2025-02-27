@@ -27,4 +27,32 @@ CURRENT GENERAL LAYOUT
 		Application <--- Presentation 
 			|
 		  Domain
-				
+
+4.0: Module Communication
+
+																		Event.API
+																			|
+																			|
+							---------------------------------------------------------------------------------------------
+							|												|											|
+						Event-Module									User-Module									Ticketing-Module
+							||											(same)											(same)
+					Infrastructure
+							|
+			----------------|-----------------
+			|				|				  |
+		Application <--- Presentation -----> PublicAPI
+			|								(synchronouse)
+		  Domain
+
+
+
+----------------------------------------------------------------COMMON----------------------------------------------------------------------------------------------------
+						* Referenced by all project respective to their type (app,domain,infra,presentation)
+									
+								 Common.Infrastructure
+										|
+		Common.Application <---- Common.Presentation
+			|
+			|
+		Common.Domain

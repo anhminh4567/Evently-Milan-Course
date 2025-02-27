@@ -410,3 +410,4 @@ dotnet_style_allow_statement_immediately_after_block_experimental = true:silent
 
 dotnet_diagnostic.IDE0160.severity = none
 dotnet_diagnostic.IDE0161.severity = none
+dotnet_diagnostic.IDE0011.severity = none

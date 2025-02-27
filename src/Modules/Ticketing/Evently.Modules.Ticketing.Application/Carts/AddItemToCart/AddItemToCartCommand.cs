@@ -7,28 +7,33 @@ using Evently.Modules.Users.PublicApi;
 
 namespace Evently.Modules.Ticketing.Application.Carts.AddItemToCart;
 
-public sealed record AddItemToCartCommand(Guid CustomerId, Guid TicketTypeId, decimal Quantity) : ICommand;
+public sealed record AddItemToCartCommand(string CustomerId, string TicketTypeId, decimal Quantity) : ICommand;
 
-internal sealed class AddItemToCartCommandHandler(CartService cartService, IUsersApi usersApi, IEventsApi eventsApi)
+internal sealed class AddItemToCartCommandHandler
     : ICommandHandler<AddItemToCartCommand>
 {
+    private readonly CartService _cartService;
+    private readonly IUserApi _userApi;
+    private readonly IEventsApi _eventsApi;
+
+    public AddItemToCartCommandHandler(CartService cartService, IUserApi userApi, IEventsApi eventsApi)
+    {
+        _cartService = cartService;
+        _userApi = userApi;
+        _eventsApi = eventsApi;
+    }
+
     public async Task<Result> Handle(AddItemToCartCommand request, CancellationToken cancellationToken)
     {
         // 1. Get customer
-        UserResponse? customer = await usersApi.GetAsync(request.CustomerId, cancellationToken);
-
+        UserResponse? customer = await _userApi.GetAsync(request.CustomerId, cancellationToken);
         if (customer is null)
-        {
             return Result.Failure(CustomerErrors.NotFound(request.CustomerId));
-        }
 
         // 2. Get ticket type
-        TicketTypeResponse? ticketType = await eventsApi.GetTicketTypeAsync(request.TicketTypeId, cancellationToken);
-
+        TicketTypeResponse? ticketType = await _eventsApi.GetTicketTypeAsync(request.TicketTypeId, cancellationToken);
         if (ticketType is null)
-        {
             return Result.Failure(TicketTypeErrors.NotFound(request.TicketTypeId));
-        }
 
         // 3. Add item to cart
         var cartItem = new CartItem
@@ -38,8 +43,7 @@ internal sealed class AddItemToCartCommandHandler(CartService cartService, IUser
             Quantity = request.Quantity,
             Currency = ticketType.Currency
         };
-
-        await cartService.AddItemAsync(customer.Id, cartItem, cancellationToken);
+        await _cartService.AddItemAsync(customer.Id, cartItem, cancellationToken);
 
         return Result.Success();
     }

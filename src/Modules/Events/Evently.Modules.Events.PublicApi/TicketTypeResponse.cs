@@ -1,0 +1,9 @@
+﻿namespace Evently.Modules.Events.PublicApi;
+
+public sealed record TicketTypeResponse(
+    string Id,
+    string EventId,
+    string Name,
+    decimal Price,
+    string Currency,
+    decimal Quantity);
