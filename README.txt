@@ -56,7 +56,7 @@ CURRENT GENERAL LAYOUT
 							|				|				  |								.										    .
 							|				|				  |								.										    .
 					---- Application <--- Presentation .....> PublicAPI				  < reference									< reference
-					|		    |   						(synchronouse)				 from Application >							from Application >
+					|		    |   						(synchronouse)				 from Presentation >							from Presentation >
 					|		    |															.										    .
 					|		    |															.										    .
 				Domain	    	|														    .										    .
