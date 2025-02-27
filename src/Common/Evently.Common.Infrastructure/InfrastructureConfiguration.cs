@@ -5,6 +5,7 @@ using Evently.Common.Domain;
 using Evently.Common.Infrastructure.Caching;
 using Evently.Common.Infrastructure.Clock;
 using Evently.Common.Infrastructure.Data;
+using Evently.Common.Infrastructure.Outbox;
 using Evently.Modules.Events.Infrastructure.Database;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -27,7 +28,13 @@ public static class InfrastructureConfiguration
         services.AddScoped(typeof(IBaseRepository<>),typeof(BaseRepository<>));
 
         services.TryAddSingleton<ICacheService, CacheService>();
-        IConnectionMultiplexer connectionMultiplexer = ConnectionMultiplexer.Connect(cacheConnectionString);
+        IConnectionMultiplexer connectionMultiplexer = ConnectionMultiplexer.Connect(cacheConnectionString, config =>
+        {
+            // this only be places here for ONE PURPOSE ( SHOULD BE REMOVED IN PROD  )
+            //  --------------------- FOR MIGRATION PURPOSE ----------------------------
+            // without this migration  can't build project
+            config.AbortOnConnectFail = false;
+        });
         services.TryAddSingleton(connectionMultiplexer);
         services.AddStackExchangeRedisCache(opt =>
         {
@@ -37,6 +44,9 @@ public static class InfrastructureConfiguration
             /// 2nd method to register
             opt.ConnectionMultiplexerFactory = () => Task.FromResult(connectionMultiplexer);
         });
+
+        //register interceptors
+        services.AddSingleton<PublishDomainEventsInterceptor>();
         return services;
     }
 }

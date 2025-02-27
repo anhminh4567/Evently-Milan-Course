@@ -1,5 +1,5 @@
-﻿using Evently.Common.Application.Messaging;
-using Evently.Common.Domain;
+﻿using Evently.Common.Application.Data;
+using Evently.Common.Application.Messaging;
 using Evently.Modules.Events.Application.Abstractions;
 using Evently.Modules.Events.Domain.Categories;
 

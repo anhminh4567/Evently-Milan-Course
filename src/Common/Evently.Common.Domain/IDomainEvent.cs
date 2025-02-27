@@ -1,6 +1,8 @@
-﻿namespace Evently.Common.Domain;
+﻿using MediatR;
 
-public interface IDomainEvent
+namespace Evently.Common.Domain;
+
+public interface IDomainEvent : INotification
 {
     string Id { get; }
     DateTime OccuredTimeUtc { get; }

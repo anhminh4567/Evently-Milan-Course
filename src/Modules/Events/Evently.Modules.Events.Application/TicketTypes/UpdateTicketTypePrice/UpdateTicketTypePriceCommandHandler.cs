@@ -1,5 +1,4 @@
 ﻿using Evently.Common.Application.Messaging;
-using Evently.Common.Domain;
 using Evently.Modules.Events.Application.Abstractions;
 using Evently.Modules.Events.Domain.TicketTypes;
 

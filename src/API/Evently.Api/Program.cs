@@ -4,6 +4,8 @@ using Evently.Common.Application;
 using Evently.Common.Infrastructure;
 using Evently.Common.Presentation.Endpoints;
 using Evently.Modules.Events.Infrastructure;
+using Evently.Modules.Ticketing.Infrastructure;
+using Evently.Modules.Users.Infrastructure;
 using Serilog;
 
 // this is used to start a log before service provider, to log state of application
@@ -26,12 +28,18 @@ builder.Services.AddSerilog((sp, config) =>
 builder.Services.AddScoped<CustomExceptionHandlerMiddleware>();
 builder.Services.AddProblemDetails();
 //builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
-builder.Services.AddApplication([Evently.Modules.Events.Application.MetaClass.EventApplicationAssembly]);
+builder.Services.AddApplication(
+    [Evently.Modules.Events.Application.MetaClass.EventApplicationAssembly,
+    Evently.Modules.Users.Application.AssemblyReference.Assembly,
+    Evently.Modules.Ticketing.Application.AssemblyReference.Assembly,
+    ]);
 builder.Services.AddInfrastructure(builder.Configuration);
 // add appsettings of modules
 
 builder.Services.AddEventsModule(builder.Configuration);
-builder.Configuration.AddModulesAppsettings(["events"]);
+builder.Services.AddUsersModule(builder.Configuration);
+builder.Services.AddTicketingModule(builder.Configuration);
+builder.Configuration.AddModulesAppsettings(["events", "users"]);
 
 WebApplication app = builder.Build();
 

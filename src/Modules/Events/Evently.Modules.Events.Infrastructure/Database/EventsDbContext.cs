@@ -1,4 +1,5 @@
 ﻿using System.Reflection;
+using Evently.Common.Application.Data;
 using Evently.Modules.Events.Application.Abstractions;
 using Evently.Modules.Events.Domain.Categories;
 using Evently.Modules.Events.Domain.Events;
@@ -13,7 +14,7 @@ public sealed class EventsDbContext : DbContext , IUnitOfWork
     //{
     //}
 
-    public EventsDbContext(DbContextOptions options) : base(options)
+    public EventsDbContext(DbContextOptions<EventsDbContext> options) : base(options)
     {
     }
 
