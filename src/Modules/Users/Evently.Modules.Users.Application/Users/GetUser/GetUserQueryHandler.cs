@@ -27,7 +27,7 @@ internal sealed class GetUserQueryHandler: IQueryHandler<GetUserQuery, UserRespo
                  "Email" AS {nameof(UserResponse.Email)},
                  "FirstName" AS {nameof(UserResponse.FirstName)},
                  "LastName" AS {nameof(UserResponse.LastName)}
-             FROM users.Users
+             FROM users."Users"
              WHERE "Id" = @UserId
              """;
 

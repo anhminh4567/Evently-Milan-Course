@@ -1,5 +1,4 @@
 ﻿using System.Data.Common;
-using Evently.Common.Application.Data;
 using Evently.Modules.Ticketing.Application.Abstractions.Data;
 using Evently.Modules.Ticketing.Domain.Customers;
 using Evently.Modules.Ticketing.Infrastructure.Customers;

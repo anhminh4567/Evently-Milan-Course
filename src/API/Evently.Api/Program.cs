@@ -28,18 +28,26 @@ builder.Services.AddSerilog((sp, config) =>
 builder.Services.AddScoped<CustomExceptionHandlerMiddleware>();
 builder.Services.AddProblemDetails();
 //builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
+// --------------------------- Register commmon project first ---------------------------//
+// include setting up some services like event bus, consumer from other modules, 
+// after this will register other modules later
 builder.Services.AddApplication(
     [Evently.Modules.Events.Application.MetaClass.EventApplicationAssembly,
     Evently.Modules.Users.Application.AssemblyReference.Assembly,
     Evently.Modules.Ticketing.Application.AssemblyReference.Assembly,
     ]);
-builder.Services.AddInfrastructure(builder.Configuration);
-// add appsettings of modules
+builder.Services.AddInfrastructure(builder.Configuration, [
+    Evently.Modules.Ticketing.Infrastructure.TicketingModule.ConfigureConsumers, // config consumer delegate from TicketingModule
+    ]);
+// --------------------------- Register commmon project first ---------------------------//
+
+//--------------------------------------------------------------------------------------------------------------------------------//
 
 builder.Services.AddEventsModule(builder.Configuration);
 builder.Services.AddUsersModule(builder.Configuration);
 builder.Services.AddTicketingModule(builder.Configuration);
-builder.Services.AddTicketingModule(builder.Configuration);
+
+// add appsettings of modules
 builder.Configuration.AddModulesAppsettings(["events", "users"]);
 
 WebApplication app = builder.Build();

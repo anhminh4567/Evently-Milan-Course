@@ -1,12 +1,15 @@
 ﻿using Evently.Common.Application.Caching;
 using Evently.Common.Application.Clock;
 using Evently.Common.Application.Data;
+using Evently.Common.Application.EventBus;
 using Evently.Common.Domain;
 using Evently.Common.Infrastructure.Caching;
 using Evently.Common.Infrastructure.Clock;
 using Evently.Common.Infrastructure.Data;
+using Evently.Common.Infrastructure.EventBuses;
 using Evently.Common.Infrastructure.Outbox;
 using Evently.Modules.Events.Infrastructure.Database;
+using MassTransit;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
@@ -17,7 +20,7 @@ namespace Evently.Common.Infrastructure;
 
 public static class InfrastructureConfiguration
 {
-    public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
+    public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration , Action<IRegistrationConfigurator>[] eventConsumerRegistration)
     {
         string databaseConnectionString = configuration.GetConnectionString("Database")!;
         string cacheConnectionString = configuration.GetConnectionString("CachingService");
@@ -38,15 +41,32 @@ public static class InfrastructureConfiguration
         services.TryAddSingleton(connectionMultiplexer);
         services.AddStackExchangeRedisCache(opt =>
         {
-            /// 1st method to register
-            //opt.Configuration = cacheConnectionString;
-            //opt.InstanceName = "instancename";
-            /// 2nd method to register
             opt.ConnectionMultiplexerFactory = () => Task.FromResult(connectionMultiplexer);
         });
 
         //register interceptors
         services.AddSingleton<PublishDomainEventsInterceptor>();
+
+
+        //------------------------------- Event buss section -------------------------------
+        // add Event bus
+        services.TryAddSingleton<IEventBus, EventBus>();
+        // add masstransit
+        services.AddMassTransit(config =>
+        {
+            // consumer is not in this assembly
+            // this is passed down from Event.Api
+            foreach( var moduleConsumerRegister  in eventConsumerRegistration)
+            {
+                moduleConsumerRegister(config);
+            }
+            config.UsingInMemory((ctx,cfg) => 
+            {
+                cfg.ConfigureEndpoints(ctx);
+            });
+        });
+        //------------------------------- Event buss section -------------------------------
+
         return services;
     }
 }
