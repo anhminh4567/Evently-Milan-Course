@@ -1,8 +1,10 @@
-﻿using Evently.Common.Infrastructure.Outbox;
+﻿using Evently.Common.Application.Authorization;
+using Evently.Common.Infrastructure.Outbox;
 using Evently.Common.Presentation.Endpoints;
 using Evently.Modules.Users.Application.Abstractions.Data;
 using Evently.Modules.Users.Application.Abstractions.Identity;
 using Evently.Modules.Users.Domain.Users;
+using Evently.Modules.Users.Infrastructure.Authorization;
 using Evently.Modules.Users.Infrastructure.Database;
 using Evently.Modules.Users.Infrastructure.Identity;
 using Evently.Modules.Users.Infrastructure.Users;
@@ -44,8 +46,11 @@ public static class UsersModule
             KeyCloakOptions options = sp.GetRequiredService<IOptions<KeyCloakOptions>>().Value;
             httpClient.BaseAddress = new Uri(options.AdminUrl);
         }).AddHttpMessageHandler<KeyCloakAuthDelegatingHandler>();
-
         // -------------------------- register KEYCLOAK client------------------------------
+
+        // add PermissionService impl IPermissionService (Evently.Common.Application)
+        services.AddScoped<IPermissionService, PermissionService>();
+
 
         services.AddTransient<IIdentityProviderService, IdentityProviderService>();
 
