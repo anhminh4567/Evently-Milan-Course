@@ -9,6 +9,7 @@ using Microsoft.Extensions.DependencyInjection;
 namespace Evently.Common.Infrastructure.Authentication;
 internal static class AuthenticationExtensions
 {
+    #pragma warning disable IDE0060
     internal static IServiceCollection AddAuthenticationInternal(this IServiceCollection services, IConfiguration configuration)
     {
         services.AddAuthorization();
