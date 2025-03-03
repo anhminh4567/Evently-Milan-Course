@@ -21,8 +21,8 @@ internal class CreateEvent : IEndpoint
 				request.EndsAtUtc));
 
 			return result.Match(Results.Ok, Common.Presentation.ApiResults.ApiResults.Problem);
-		})
-		.WithTags(Tags.Events);
+		}).RequireAuthorization()
+        .WithTags(Tags.Events);
 	}
 
 	internal sealed class CreateEventRequest

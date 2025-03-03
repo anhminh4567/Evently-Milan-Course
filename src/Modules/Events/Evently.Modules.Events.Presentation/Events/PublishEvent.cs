@@ -17,7 +17,7 @@ internal class PublishEvent : IEndpoint
             Result result = await sender.Send(new PublishEventCommand(id));
 
             return result.Match(Results.NoContent, Common.Presentation.ApiResults.ApiResults.Problem);
-        })
+        }).RequireAuthorization()
         .WithTags(Tags.Events);
     }
 }

@@ -23,7 +23,7 @@ internal class SearchEvents : IEndpoint
                 new SearchEventsQuery(categoryId, startDate, endDate, page, pageSize));
 
             return result.Match(Results.Ok, Common.Presentation.ApiResults.ApiResults.Problem);
-        })
+        }).RequireAuthorization()
         .WithTags(Tags.Events);
     }
 }

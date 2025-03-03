@@ -6,6 +6,7 @@ using Evently.Common.Presentation.Endpoints;
 using Evently.Modules.Events.Infrastructure;
 using Evently.Modules.Ticketing.Infrastructure;
 using Evently.Modules.Users.Infrastructure;
+using Microsoft.OpenApi.Models;
 using Serilog;
 
 // this is used to start a log before service provider, to log state of application
@@ -18,7 +19,29 @@ WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(opt =>
 {
-    //opt.CustomOperationIds(type => type.ToString());
+    opt.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+    {
+        In = ParameterLocation.Header,
+        Description = "Please enter token",
+        Name = "Authorization",
+        Type = SecuritySchemeType.Http,
+        BearerFormat = "JWT",
+        Scheme = "bearer"
+    });
+    opt.AddSecurityRequirement(new OpenApiSecurityRequirement
+                    {
+                {
+                    new OpenApiSecurityScheme
+                    {
+                        Reference = new OpenApiReference
+                        {
+                            Type=ReferenceType.SecurityScheme,
+                            Id="Bearer"
+                        }
+                    },
+                    new string[]{}
+                }
+            });
 });
 
 builder.Services.AddSerilog((sp, config) =>
@@ -75,6 +98,9 @@ app.UseMiddleware<CustomExceptionHandlerMiddleware>();
 //EventsModule.MapEndpoints(app);
 // ** new automatic stuff
 // from ----- Evently.Common.Presentation.Endpoints ------
+app.UseAuthentication();
+app.UseAuthorization();
+
 app.MapEndpoints();
 
 app.Run();

@@ -17,8 +17,8 @@ internal class RescheduleEvent : IEndpoint
 				new RescheduleEventCommand(id, request.StartsAtUtc, request.EndsAtUtc));
 
 			return result.Match(Results.NoContent, Common.Presentation.ApiResults.ApiResults.Problem);
-		})
-		.WithTags(Tags.Events);
+		}).RequireAuthorization()
+        .WithTags(Tags.Events);
 	}
 	internal sealed class RescheduleEventRequest
 	{

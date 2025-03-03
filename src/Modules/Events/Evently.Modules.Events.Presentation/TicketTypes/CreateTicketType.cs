@@ -20,7 +20,7 @@ internal  class CreateTicketType : IEndpoint
                 request.Quantity));
 
             return result.Match(Results.Ok, Common.Presentation.ApiResults.ApiResults.Problem);
-        })
+        }).RequireAuthorization()
         .WithTags(Tags.TicketTypes);
     }
 

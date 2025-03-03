@@ -15,7 +15,7 @@ internal class CancelEvent : IEndpoint
             Result result = await sender.Send(new CancelEventCommand(id));
 
             return result.Match(Results.NoContent, Common.Presentation.ApiResults.ApiResults.Problem);
-        })
+        }).RequireAuthorization()
         .WithTags(Tags.Events);
     }
 }

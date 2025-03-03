@@ -29,6 +29,22 @@ services:
       - 6300:6379
 
 
+  evently.identity:
+    image: quay.io/keycloak/keycloak:latest
+    container_name: Evently.Identity
+    command: start-dev --import-realm
+    environment:
+      - KC_HEALTH_ENABLED=true
+      - KEYCLOAK_ADMIN=admin
+      - KEYCLOAK_ADMIN_PASSWORD=admin
+    volumes:
+      - ./.containers/identity:/opt/keycloak/data
+      - ./.files:/opt/keycloak/data/import
+    ports:
+      - 18080:8080
+      - 9000:9000 # if you want to expose health check locally
+ 
+
   evently.api:
     image: ${DOCKER_REGISTRY-}eventlyapi
     container_name: Evently.Api
@@ -38,6 +54,7 @@ services:
     depends_on:
       - evently.database
       - evently.seq
+      - evently.identity
     ports:
       - 5000:8080
       - 5001:8081

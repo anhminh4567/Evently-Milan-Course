@@ -3,6 +3,7 @@ using Evently.Common.Application.Clock;
 using Evently.Common.Application.Data;
 using Evently.Common.Application.EventBus;
 using Evently.Common.Domain;
+using Evently.Common.Infrastructure.Authentication;
 using Evently.Common.Infrastructure.Caching;
 using Evently.Common.Infrastructure.Clock;
 using Evently.Common.Infrastructure.Data;
@@ -24,6 +25,12 @@ public static class InfrastructureConfiguration
     {
         string databaseConnectionString = configuration.GetConnectionString("Database")!;
         string cacheConnectionString = configuration.GetConnectionString("CachingService");
+
+        //------------------------------- Auth section -------------------------------
+        services.AddAuthenticationInternal(configuration);
+
+        //------------------------------- Auth section -------------------------------
+
         NpgsqlDataSource dataSource = new NpgsqlDataSourceBuilder(databaseConnectionString).Build();
         services.AddSingleton(dataSource);
         services.AddScoped<IDbConnectionFactory, DbConnectionFactory>();

@@ -15,7 +15,7 @@ internal class ChangeTicketTypePrice : IEndpoint
                 Result result = await sender.Send(new UpdateTicketTypePriceCommand(id, request.Price));
 
                 return result.Match(Results.NoContent, Common.Presentation.ApiResults.ApiResults.Problem);
-            })
+            }).RequireAuthorization()
             .WithTags(Tags.TicketTypes);
     }
 
