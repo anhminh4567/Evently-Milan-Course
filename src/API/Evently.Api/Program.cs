@@ -3,6 +3,7 @@ using Evently.Api.Middlewares;
 using Evently.Common.Application;
 using Evently.Common.Infrastructure;
 using Evently.Common.Presentation.Endpoints;
+using Evently.Modules.Attendance.Infrastructure;
 using Evently.Modules.Events.Infrastructure;
 using Evently.Modules.Ticketing.Infrastructure;
 using Evently.Modules.Users.Infrastructure;
@@ -58,6 +59,7 @@ builder.Services.AddApplication(
     [Evently.Modules.Events.Application.MetaClass.EventApplicationAssembly,
     Evently.Modules.Users.Application.AssemblyReference.Assembly,
     Evently.Modules.Ticketing.Application.AssemblyReference.Assembly,
+    Evently.Modules.Attendance.Application.AssemblyReference.Assembly,
     ]);
 builder.Services.AddInfrastructure(builder.Configuration, [
     Evently.Modules.Ticketing.Infrastructure.TicketingModule.ConfigureConsumers, // config consumer delegate from TicketingModule
@@ -65,13 +67,14 @@ builder.Services.AddInfrastructure(builder.Configuration, [
 // --------------------------- Register commmon project first ---------------------------//
 
 //--------------------------------------------------------------------------------------------------------------------------------//
+builder.Configuration.AddModulesAppsettings(["events", "users", "attendance", "ticketing"]);
 
 builder.Services.AddEventsModule(builder.Configuration);
 builder.Services.AddUsersModule(builder.Configuration);
 builder.Services.AddTicketingModule(builder.Configuration);
+builder.Services.AddAttendanceModule(builder.Configuration);
 
 // add appsettings of modules
-builder.Configuration.AddModulesAppsettings(["events", "users"]);
 
 WebApplication app = builder.Build();
 
