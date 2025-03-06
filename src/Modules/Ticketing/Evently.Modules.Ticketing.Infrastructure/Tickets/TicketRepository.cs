@@ -1,4 +1,4 @@
-﻿using Evently.Modules.Events.Infrastructure.Database;
+﻿using Evently.Common.Infrastructure.Repositories;
 using Evently.Modules.Ticketing.Domain.Events;
 using Evently.Modules.Ticketing.Domain.Tickets;
 using Evently.Modules.Ticketing.Infrastructure.Database;

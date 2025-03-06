@@ -1,6 +1,5 @@
 ﻿using Evently.Common.Application.Messaging;
 using Evently.Common.Domain;
-using Evently.Modules.Events.PublicApi;
 using Evently.Modules.Ticketing.Domain.Customers;
 using Evently.Modules.Ticketing.Domain.Events;
 
@@ -13,13 +12,13 @@ internal sealed class AddItemToCartCommandHandler
 {
     private readonly CartService _cartService;
     private readonly ICustomerRepository _customerRepository;
-    private readonly IEventsApi _eventsApi;
+   private readonly ITicketTypeRepository _ticketTypeRepository;
 
-    public AddItemToCartCommandHandler(CartService cartService, ICustomerRepository customerRepository, IEventsApi eventsApi)
+    public AddItemToCartCommandHandler(CartService cartService, ICustomerRepository customerRepository, ITicketTypeRepository ticketTypeRepository)
     {
         _cartService = cartService;
         _customerRepository = customerRepository;
-        _eventsApi = eventsApi;
+        _ticketTypeRepository = ticketTypeRepository;
     }
 
     public async Task<Result> Handle(AddItemToCartCommand request, CancellationToken cancellationToken)
@@ -33,7 +32,7 @@ internal sealed class AddItemToCartCommandHandler
             return Result.Failure(CustomerErrors.NotFound(request.CustomerId));
 
         // 2. Get ticket type
-        TicketTypeResponse? ticketType = await _eventsApi.GetTicketTypeAsync(request.TicketTypeId, cancellationToken);
+        TicketType? ticketType = await _ticketTypeRepository.GetAsync(request.TicketTypeId, cancellationToken);
         if (ticketType is null)
             return Result.Failure(TicketTypeErrors.NotFound(request.TicketTypeId));
 

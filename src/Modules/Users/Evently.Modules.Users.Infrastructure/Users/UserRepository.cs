@@ -1,8 +1,8 @@
-﻿using Evently.Modules.Events.Infrastructure.Database;
-using Evently.Modules.Users.Domain.Users;
+﻿using Evently.Modules.Users.Domain.Users;
 using Evently.Modules.Users.Infrastructure.Database;
 using Microsoft.EntityFrameworkCore;
-
+using Evently.Common.Infrastructure;
+using Evently.Common.Infrastructure.Repositories;
 namespace Evently.Modules.Users.Infrastructure.Users;
 
 internal sealed class UserRepository: BaseRepository<User> , IUserRepository

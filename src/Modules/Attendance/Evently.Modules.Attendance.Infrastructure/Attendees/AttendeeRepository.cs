@@ -1,7 +1,7 @@
 ﻿using Evently.Common.Domain;
+using Evently.Common.Infrastructure.Repositories;
 using Evently.Modules.Attendance.Domain.Attendees;
 using Evently.Modules.Attendance.Infrastructure.Database;
-using Evently.Modules.Events.Infrastructure.Database;
 using Microsoft.EntityFrameworkCore;
 
 namespace Evently.Modules.Attendance.Infrastructure.Attendees;

@@ -7,41 +7,41 @@ using System.Threading.Tasks;
 using Evently.Common.Domain;
 using Microsoft.EntityFrameworkCore;
 
-namespace Evently.Modules.Events.Infrastructure.Database;
+namespace Evently.Common.Infrastructure.Repositories;
 public class BaseRepository<T> : IBaseRepository<T> where T : class
 {
-	protected readonly DbContext _dbContext;
-	protected readonly DbSet<T> _set;
+    protected readonly DbContext _dbContext;
+    protected readonly DbSet<T> _set;
 
-	public BaseRepository(DbContext dbContext)
-	{
-		_dbContext = dbContext;
-		_set = _dbContext.Set<T>();
-	}
-	public virtual async Task<List<T>> GetAll(CancellationToken token = default)
-	{
-		return await _set.ToListAsync(token);
-	}
+    public BaseRepository(DbContext dbContext)
+    {
+        _dbContext = dbContext;
+        _set = _dbContext.Set<T>();
+    }
+    public virtual async Task<List<T>> GetAll(CancellationToken token = default)
+    {
+        return await _set.ToListAsync(token);
+    }
 
-	public virtual async Task<T?> GetById(params object[] ids)
-	{
-		return await _set.FindAsync(ids);
-	}
-	public virtual int GetCount()
-	{
-		return _set.Count();
-	}
-	public virtual void Create(T entity)
-	{
-		_set.Add(entity);
-	}
+    public virtual async Task<T?> GetById(params object[] ids)
+    {
+        return await _set.FindAsync(ids);
+    }
+    public virtual int GetCount()
+    {
+        return _set.Count();
+    }
+    public virtual void Create(T entity)
+    {
+        _set.Add(entity);
+    }
 
-	public virtual void Delete(T entity)
-	{
-		_set.Remove(entity);
-	}
-	public virtual void Update(T entity)
-	{
-		_set.Update(entity);
-	}
+    public virtual void Delete(T entity)
+    {
+        _set.Remove(entity);
+    }
+    public virtual void Update(T entity)
+    {
+        _set.Update(entity);
+    }
 }

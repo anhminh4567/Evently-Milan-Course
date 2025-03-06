@@ -1,4 +1,4 @@
-namespace Evently.ArchitectureTests;
+namespace Evently.Modules.Users.ArchitectureTests;
 
 public class UnitTest1
 {

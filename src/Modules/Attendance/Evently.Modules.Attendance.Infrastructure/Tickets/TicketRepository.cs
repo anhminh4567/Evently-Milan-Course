@@ -1,6 +1,6 @@
-﻿using Evently.Modules.Attendance.Domain.Tickets;
+﻿using Evently.Common.Infrastructure.Repositories;
+using Evently.Modules.Attendance.Domain.Tickets;
 using Evently.Modules.Attendance.Infrastructure.Database;
-using Evently.Modules.Events.Infrastructure.Database;
 using Microsoft.EntityFrameworkCore;
 
 namespace Evently.Modules.Attendance.Infrastructure.Tickets;

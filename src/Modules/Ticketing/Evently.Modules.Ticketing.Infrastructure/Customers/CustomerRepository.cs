@@ -1,4 +1,4 @@
-﻿using Evently.Modules.Events.Infrastructure.Database;
+﻿using Evently.Common.Infrastructure.Repositories;
 using Evently.Modules.Ticketing.Domain.Customers;
 using Evently.Modules.Ticketing.Infrastructure.Database;
 using Microsoft.EntityFrameworkCore;

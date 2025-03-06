@@ -1,4 +1,5 @@
-﻿using Evently.Modules.Events.Domain.Categories;
+﻿using Evently.Common.Infrastructure.Repositories;
+using Evently.Modules.Events.Domain.Categories;
 using Evently.Modules.Events.Infrastructure.Database;
 using Microsoft.EntityFrameworkCore;
 

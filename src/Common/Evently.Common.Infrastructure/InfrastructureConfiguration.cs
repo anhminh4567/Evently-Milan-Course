@@ -10,7 +10,7 @@ using Evently.Common.Infrastructure.Clock;
 using Evently.Common.Infrastructure.Data;
 using Evently.Common.Infrastructure.EventBuses;
 using Evently.Common.Infrastructure.Outbox;
-using Evently.Modules.Events.Infrastructure.Database;
+using Evently.Common.Infrastructure.Repositories;
 using MassTransit;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
