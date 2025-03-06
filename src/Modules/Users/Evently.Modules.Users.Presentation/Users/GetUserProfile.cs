@@ -33,7 +33,7 @@ internal sealed class GetUserProfile : IEndpoint
 
             return result.Match(Results.Ok, ApiResults.Problem);
         })
-            .RequireAuthorization("users:read") // specify custom authorization policy, see its imlementation in Common.Infra
+            .RequireAuthorization(Permissions.GetUser) // specify custom authorization policy, see its imlementation in Common.Infra
             .WithTags(Tags.Users);
     }
 }

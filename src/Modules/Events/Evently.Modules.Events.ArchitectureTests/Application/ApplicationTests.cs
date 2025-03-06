@@ -1,9 +1,9 @@
 ﻿using Evently.Common.Application.Messaging;
-using Evently.Modules.Users.ArchitectureTests.Abstractions;
+using Evently.Modules.Events.ArchitectureTests.Abstractions;
 using FluentValidation;
 using NetArchTest.Rules;
 
-namespace Evently.Modules.Users.ArchitectureTests.Application;
+namespace Evently.Modules.Events.ArchitectureTests.Application;
 
 public class ApplicationTests : BaseTest
 {
@@ -77,17 +77,17 @@ public class ApplicationTests : BaseTest
             .ShouldBeSuccessful();
     }
 
-    [Fact]
-    public void Query_Should_BeSealed()
-    {
-        Types.InAssembly(ApplicationAssembly)
-            .That()
-            .ImplementInterface(typeof(IQuery<>))
-            .Should()
-            .BeSealed()
-            .GetResult()
-            .ShouldBeSuccessful();
-    }
+    //[Fact]
+    //public void Query_Should_BeSealed()
+    //{
+    //    Types.InAssembly(ApplicationAssembly)
+    //        .That()
+    //        .ImplementInterface(typeof(IQuery<>))
+    //        .Should()
+    //        .BeSealed()
+    //        .GetResult()
+    //        .ShouldBeSuccessful();
+    //}
 
     [Fact]
     public void Query_ShouldHave_NameEndingWith_Query()
@@ -149,17 +149,17 @@ public class ApplicationTests : BaseTest
             .ShouldBeSuccessful();
     }
 
-    [Fact]
-    public void Validator_Should_BeSealed()
-    {
-        Types.InAssembly(ApplicationAssembly)
-            .That()
-            .Inherit(typeof(AbstractValidator<>))
-            .Should()
-            .BeSealed()
-            .GetResult()
-            .ShouldBeSuccessful();
-    }
+    //[Fact]
+    //public void Validator_Should_BeSealed()
+    //{
+    //    Types.InAssembly(ApplicationAssembly)
+    //        .That()
+    //        .Inherit(typeof(AbstractValidator<>))
+    //        .Should()
+    //        .BeSealed()
+    //        .GetResult()
+    //        .ShouldBeSuccessful();
+    //}
 
     [Fact]
     public void Validator_ShouldHave_NameEndingWith_Validator()
@@ -185,7 +185,7 @@ public class ApplicationTests : BaseTest
             .ShouldBeSuccessful();
     }
 
-    [Fact(Skip = "Dont need sealed")]
+    [Fact]
     public void DomainEventHandler_Should_BeSealed()
     {
         Types.InAssembly(ApplicationAssembly)

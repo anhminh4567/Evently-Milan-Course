@@ -1,9 +1,9 @@
 ﻿using Evently.Common.Application.Messaging;
-using Evently.Modules.Users.ArchitectureTests.Abstractions;
+using Evently.Modules.Ticketing.ArchitectureTests.Abstractions;
 using FluentValidation;
 using NetArchTest.Rules;
 
-namespace Evently.Modules.Users.ArchitectureTests.Application;
+namespace Evently.Modules.Ticketing.ArchitectureTests.Application;
 
 public class ApplicationTests : BaseTest
 {
@@ -185,7 +185,7 @@ public class ApplicationTests : BaseTest
             .ShouldBeSuccessful();
     }
 
-    [Fact(Skip = "Dont need sealed")]
+    [Fact]
     public void DomainEventHandler_Should_BeSealed()
     {
         Types.InAssembly(ApplicationAssembly)
