@@ -1,11 +1,15 @@
 {
   "Users": {
+    "Outbox": {
+      "IntervalInSeconds": 5,
+      "BatchSize": 50
+    },
     "KeyCloak": {
       "AdminUrl": "",
       "TokenUrl": "",
-      "ConfidentialClientId": "evently-confidential-client",
+      "ConfidentialClientId": "",
       "ConfidentialClientSecret": "",
-      "PublicClientId": "evently-public-client"
+      "PublicClientId": ""
     }
   }
 }

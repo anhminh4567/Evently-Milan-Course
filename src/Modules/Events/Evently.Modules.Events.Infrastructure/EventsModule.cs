@@ -64,7 +64,7 @@ public static class EventsModule
         services.AddDbContext<EventsDbContext>((sp, options) =>
         {
             // this is registered in the ---Evently.Common.Infrastructure---
-            var domainEventInterceptors = sp.GetRequiredService<PublishDomainEventsInterceptor>();
+            var domainEventInterceptors = sp.GetRequiredService<InsertOutboxMessageEventsInterceptor>();
             options
             .UseNpgsql(
                 databaseConnectionString,

@@ -16,6 +16,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Npgsql;
+using Quartz;
 using StackExchange.Redis;
 
 namespace Evently.Common.Infrastructure;
@@ -55,7 +56,7 @@ public static class InfrastructureConfiguration
         });
 
         //register interceptors
-        services.AddSingleton<PublishDomainEventsInterceptor>();
+        services.AddSingleton<InsertOutboxMessageEventsInterceptor>();
 
 
         //------------------------------- Event buss section -------------------------------
@@ -76,6 +77,16 @@ public static class InfrastructureConfiguration
             });
         });
         //------------------------------- Event buss section -------------------------------
+
+
+
+        //------------------------------- QUARTZ for BG Job -------------------------------//
+        services.AddQuartz();
+        services.AddQuartzHostedService(options =>
+        {
+            options.WaitForJobsToComplete = true;
+        });
+        //------------------------------- QUARTZ for BG Job -------------------------------//
 
         return services;
     }

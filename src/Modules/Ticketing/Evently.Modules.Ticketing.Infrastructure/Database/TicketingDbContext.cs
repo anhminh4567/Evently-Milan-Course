@@ -1,4 +1,5 @@
 ﻿using System.Data.Common;
+using Evently.Common.Infrastructure.Outbox;
 using Evently.Modules.Ticketing.Application.Abstractions.Data;
 using Evently.Modules.Ticketing.Domain.Customers;
 using Evently.Modules.Ticketing.Domain.Events;
@@ -35,6 +36,13 @@ public sealed class TicketingDbContext : DbContext, IUnitOfWork
     {
         modelBuilder.HasDefaultSchema(Schemas.Ticketing);
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(TicketingDbContext).Assembly);
+
+
+        // ---------------- OUTBOX ----------------------//
+        // each dbcontext have their outbox
+        modelBuilder.ApplyConfiguration(new OutboxMessageConfiguration());
+
+        // ---------------- OUTBOX ----------------------//
     }
 
     public async Task<DbTransaction> BeginTransactionAsync(CancellationToken cancellationToken = default)
