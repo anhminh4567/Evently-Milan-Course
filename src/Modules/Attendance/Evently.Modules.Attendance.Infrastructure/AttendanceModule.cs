@@ -14,6 +14,10 @@ using Evently.Modules.Attendance.Infrastructure.Events;
 using Evently.Modules.Attendance.Infrastructure.Inbox;
 using Evently.Modules.Attendance.Infrastructure.Outbox;
 using Evently.Modules.Attendance.Infrastructure.Tickets;
+using Evently.Modules.Events.IntegrationEvents;
+using Evently.Modules.Ticketing.IntegrationEvents;
+using Evently.Modules.Users.IntegrationEvents;
+using MassTransit;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.Extensions.Configuration;
@@ -56,6 +60,14 @@ public static class AttendanceModule
         services.AddScoped<ITicketRepository, TicketRepository>();
 
         services.AddScoped<IAttendanceContext, AttendanceContext>();
+    }
+
+    public static void ConfigureConsumers(IRegistrationConfigurator registrationConfigurator)
+    {
+        registrationConfigurator.AddConsumer<IntegrationEventConsumer<UserRegisteredIntegrationEvent>>();
+        registrationConfigurator.AddConsumer<IntegrationEventConsumer<UserProfileUpdatedIntegrationEvent>>();
+        registrationConfigurator.AddConsumer<IntegrationEventConsumer<EventPublishedIntegrationEvent>>();
+        registrationConfigurator.AddConsumer<IntegrationEventConsumer<TicketIssuedIntegrationEvent>>();
     }
     private static void AddDomainEventHandlers(this IServiceCollection services)
     {

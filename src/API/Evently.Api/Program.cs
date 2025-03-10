@@ -63,6 +63,7 @@ builder.Services.AddApplication(
     ]);
 builder.Services.AddInfrastructure(builder.Configuration, [
     Evently.Modules.Ticketing.Infrastructure.TicketingModule.ConfigureConsumers, // config consumer delegate from TicketingModule
+    Evently.Modules.Attendance.Infrastructure.AttendanceModule.ConfigureConsumers,
     ]);
 // --------------------------- Register commmon project first ---------------------------//
 
