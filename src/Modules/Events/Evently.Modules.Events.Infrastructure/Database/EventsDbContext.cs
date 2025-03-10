@@ -2,6 +2,7 @@
 using System.Reflection;
 using System.Threading;
 using Evently.Common.Application.Data;
+using Evently.Common.Infrastructure.Inbox;
 using Evently.Common.Infrastructure.Outbox;
 using Evently.Modules.Events.Application.Abstractions;
 using Evently.Modules.Events.Domain.Categories;
@@ -40,8 +41,12 @@ public sealed class EventsDbContext : DbContext , IUnitOfWork
         // each dbcontext have their outbox
         modelBuilder.ApplyConfiguration(new OutboxMessageConfiguration());
         modelBuilder.ApplyConfiguration(new OutboxMessageConsumerConfiguration());
-
         // ---------------- OUTBOX ----------------------//
+
+        // ---------------- InBOX ----------------------//
+        modelBuilder.ApplyConfiguration(new InboxMessageConfiguration());
+        modelBuilder.ApplyConfiguration(new InboxMessageConsumerConfiguration());
+        // ---------------- InBOX ----------------------//
     }
     public async Task<DbTransaction> BeginTransactionAsync(CancellationToken tokeen = default)
     {
