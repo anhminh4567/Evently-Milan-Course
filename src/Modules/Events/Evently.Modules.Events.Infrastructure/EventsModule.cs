@@ -13,6 +13,7 @@ using Evently.Modules.Events.Domain.TicketTypes;
 using Evently.Modules.Events.Infrastructure.Categories;
 using Evently.Modules.Events.Infrastructure.Database;
 using Evently.Modules.Events.Infrastructure.Events;
+using Evently.Modules.Events.Infrastructure.Outbox;
 using Evently.Modules.Events.Infrastructure.TicketTypes;
 using Evently.Modules.Events.Presentation.Categories;
 using Evently.Modules.Events.Presentation.Events;
@@ -97,16 +98,24 @@ public static class EventsModule
         foreach (Type domainEventHandler in domainEventHandlers)
         {
             services.TryAddScoped(domainEventHandler);
+            // we get the type of domainEvent from the Handlers we get from current assembly 
+            // since each handler implemennt DomainEventHandler<T> : IDomainEventHandler<T> : IDomainEvent
+            // ==> we can get the argument <T> (generic argument), easily, as it is the only one in the list ( .GetGenericArguments().Single() )
+            Type domainEvent = domainEventHandler
+                .GetInterfaces()
+                .Single(i => i.IsGenericType)
+                .GetGenericArguments()
+                .Single();
+            // after getting the type of the domainEvent of the handler, we create a new Type , which
+            // replace the DomainEventHandler<> , with the new IdempotentDomainEventHandler<>
+            // By taking the <T> from DomainEventHandler<T> to IdempotentDomainEventHandler<T>
+            Type closedIdempotentHandler = typeof(IdempotentDomainEventHandler<>).MakeGenericType(domainEvent);
+            // closedIdempotentHandler ==> means this generic is specific to a specifit type, not open ( open means T , like hey, this 
+            // thing might fit many type
 
-            //Type domainEvent = domainEventHandler
-            //    .GetInterfaces()
-            //    .Single(i => i.IsGenericType)
-            //    .GetGenericArguments()
-            //    .Single();
 
-            //Type closedIdempotentHandler = typeof(IdempotentDomainEventHandler<>).MakeGenericType(domainEvent);
-
-            //services.Decorate(domainEventHandler, closedIdempotentHandler);
+            // ---------------------------------- this method Decorate() is form Scrutor library ( in  ---- Common.Infastructure ---- )
+            services.Decorate(domainEventHandler, closedIdempotentHandler);
         }
     }
 }

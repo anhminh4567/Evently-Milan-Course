@@ -72,4 +72,14 @@ CURRENT GENERAL LAYOUT
 ----------------------------------------------------------------7.0: Messaging idempotency-----------------------------------------------------------------------------------------
 NOTE:
 	in this chapter, the domainEvent and its consumer will be replaced ( remove mediatR from the event publishing)
-	this is due to the introduction of new library called STrude ( allow Decorator implementation for Indempotent consumer (Video 3 in chap 7 ))
+	this is due to the introduction of new library called Scrutor ( allow Decorator implementation for Indempotent consumer (Video 3 in chap 7 ))
+
+	Outbox Indempotent :
+		this and outbox prcessing is in the same module, 
+		and everything a domain EVent is saved to outbox table, when it is process, the IndempotentEventHandler<>
+		will check if the domainEvent is processed, if no then get the handler
+			the handler processs;
+				if it is publish to integreate then publish to event bus
+				NOTE THIS PART: we just implement indempotent for outbox, not for integration event YET ( this is when we use Inbox pattern)
+			return success;
+		will save the message to OutbboxMessageConsumer table
