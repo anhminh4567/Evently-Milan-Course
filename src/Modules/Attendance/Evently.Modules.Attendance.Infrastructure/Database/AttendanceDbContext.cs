@@ -53,6 +53,7 @@ public sealed class AttendanceDbContext(DbContextOptions<AttendanceDbContext> op
         // ---------------- OUTBOX ----------------------//
         // each dbcontext have their outbox
         modelBuilder.ApplyConfiguration(new OutboxMessageConfiguration());
+        modelBuilder.ApplyConfiguration(new OutboxMessageConsumerConfiguration());
 
         // ---------------- OUTBOX ----------------------//
     }

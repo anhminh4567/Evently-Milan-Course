@@ -48,7 +48,8 @@ public sealed class UsersDbContext : DbContext, IUnitOfWork
         // ---------------- OUTBOX ----------------------//
         // each dbcontext have their outbox
         modelBuilder.ApplyConfiguration(new OutboxMessageConfiguration());
-        
+        modelBuilder.ApplyConfiguration(new OutboxMessageConsumerConfiguration());
+
         // ---------------- OUTBOX ----------------------//
 
     }

@@ -39,6 +39,7 @@ public sealed class EventsDbContext : DbContext , IUnitOfWork
         // ---------------- OUTBOX ----------------------//
         // each dbcontext have their outbox
         modelBuilder.ApplyConfiguration(new OutboxMessageConfiguration());
+        modelBuilder.ApplyConfiguration(new OutboxMessageConsumerConfiguration());
 
         // ---------------- OUTBOX ----------------------//
     }

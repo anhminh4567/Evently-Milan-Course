@@ -3,7 +3,9 @@ using System.Data.Common;
 using Dapper;
 using Evently.Common.Application.Clock;
 using Evently.Common.Application.Data;
+using Evently.Common.Application.Messaging;
 using Evently.Common.Domain;
+using Evently.Common.Infrastructure.Outbox;
 using Evently.Common.Infrastructure.Serialization;
 using Evently.Modules.Users.Domain.Users;
 using MediatR;
@@ -51,8 +53,19 @@ internal sealed class ProcessOutboxJob : IJob
                     SerializerSettings.Instance)!;
 
                 using IServiceScope scope = _serviceScopeFactory.CreateScope();
-                IPublisher publisher = scope.ServiceProvider.GetRequiredService<IPublisher>();
-                await publisher.Publish(domainEvent);
+                // ---------------------------------------- Old mediatR DomainEventPublishing method -------------------------------------------//
+                //IPublisher publisher = scope.ServiceProvider.GetRequiredService<IPublisher>();
+                //await publisher.Publish(domainEvent);
+                // ---------------------------------------- Old mediatR DomainEventPublishing method -------------------------------------------//
+
+                // ---------------------------------------- new publish method  -------------------------------------------//
+                IEnumerable<IDomainEventHandler> domainEventHandler = DomainEventHandlersFactory.GetHandlers(domainEvent.GetType(),scope.ServiceProvider,Application.AssemblyReference.Assembly);
+                foreach (var handler in domainEventHandler)
+                {
+                    await handler.Handle(domainEvent);
+                }                    
+                // ---------------------------------------- new publish method  -------------------------------------------//
+
             }
             catch (Exception caughtException)
             {
