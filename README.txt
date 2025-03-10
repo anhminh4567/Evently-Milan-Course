@@ -65,3 +65,11 @@ CURRENT GENERAL LAYOUT
 							IntegrationEvents <-----------------------------------------------------------------------------------------
 								
 							(As-synchronouse)
+
+
+
+
+----------------------------------------------------------------7.0: Messaging idempotency-----------------------------------------------------------------------------------------
+NOTE:
+	in this chapter, the domainEvent and its consumer will be replaced ( remove mediatR from the event publishing)
+	this is due to the introduction of new library called STrude ( allow Decorator implementation for Indempotent consumer (Video 3 in chap 7 ))

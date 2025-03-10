@@ -8,7 +8,7 @@ using Evently.Modules.Users.IntegrationEvents;
 using MediatR;
 
 namespace Evently.Modules.Users.Application.Users.RegisterUser;
-internal class UserRegisteredDomainEventHandler : IDomainEventHandler<UserRegisteredDomainEvent>
+internal class UserRegisteredDomainEventHandler : DomainEventHandler<UserRegisteredDomainEvent>
 {
     //this is replaced with eventBus
     //private readonly ITicketingApi _ticketingApi;
@@ -22,7 +22,7 @@ internal class UserRegisteredDomainEventHandler : IDomainEventHandler<UserRegist
         _sender = sender;
     }
 
-    public async Task Handle(UserRegisteredDomainEvent notification, CancellationToken cancellationToken)
+    public override async Task Handle(UserRegisteredDomainEvent notification, CancellationToken cancellationToken = default)
     {
         Result<UserResponse> result = await _sender.Send(new GetUserQuery(notification.userId));
         if (result.IsFailure) 

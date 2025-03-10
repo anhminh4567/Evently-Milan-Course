@@ -1,4 +1,5 @@
-﻿using Evently.Common.Infrastructure.Outbox;
+﻿using Evently.Common.Application.Messaging;
+using Evently.Common.Infrastructure.Outbox;
 using Evently.Common.Presentation.Endpoints;
 using Evently.Modules.Attendance.Application.Abstractions.Authentication;
 using Evently.Modules.Attendance.Application.Abstractions.Data;
@@ -14,6 +15,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 
 namespace Evently.Modules.Attendance.Infrastructure;
 
@@ -23,6 +25,8 @@ public static class AttendanceModule
         this IServiceCollection services,
         IConfiguration configuration)
     {
+        services.AddDomainEventHandlers();
+
         services.AddInfrastructure(configuration);
 
         services.AddEndpoints(Presentation.AssemblyReference.Assembly);
@@ -47,5 +51,27 @@ public static class AttendanceModule
         services.AddScoped<ITicketRepository, TicketRepository>();
 
         services.AddScoped<IAttendanceContext, AttendanceContext>();
+    }
+    private static void AddDomainEventHandlers(this IServiceCollection services)
+    {
+        Type[] domainEventHandlers = Application.AssemblyReference.Assembly
+            .GetTypes()
+            .Where(t => t.IsAssignableTo(typeof(IDomainEventHandler)))
+            .ToArray();
+
+        foreach (Type domainEventHandler in domainEventHandlers)
+        {
+            services.TryAddScoped(domainEventHandler);
+
+            //Type domainEvent = domainEventHandler
+            //    .GetInterfaces()
+            //    .Single(i => i.IsGenericType)
+            //    .GetGenericArguments()
+            //    .Single();
+
+            //Type closedIdempotentHandler = typeof(IdempotentDomainEventHandler<>).MakeGenericType(domainEvent);
+
+            //services.Decorate(domainEventHandler, closedIdempotentHandler);
+        }
     }
 }

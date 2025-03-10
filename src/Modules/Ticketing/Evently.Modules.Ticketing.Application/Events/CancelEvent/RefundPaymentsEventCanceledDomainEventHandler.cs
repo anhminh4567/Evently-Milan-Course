@@ -9,15 +9,14 @@ using MediatR;
 namespace Evently.Modules.Ticketing.Application.Events.CancelEvent;
 
 internal sealed class RefundPaymentsEventCanceledDomainEventHandler(ISender sender)
-    : IDomainEventHandler<EventCanceledDomainEvent>
+    : DomainEventHandler<EventCanceledDomainEvent>
 {
-    public async Task Handle(EventCanceledDomainEvent domainEvent, CancellationToken cancellationToken)
-    {
-        Result result = await sender.Send(new RefundPaymentsForEventCommand(domainEvent.EventId), cancellationToken);
-
-        if (result.IsFailure)
-        {
-            throw new EventlyException(nameof(RefundPaymentsForEventCommand), result.Error);
-        }
-    }
+	public override async Task Handle(EventCanceledDomainEvent domainEvent, CancellationToken cancellationToken = default)
+	{
+		Result result = await sender.Send(new RefundPaymentsForEventCommand(domainEvent.EventId), cancellationToken);
+		if (result.IsFailure)
+		{
+			throw new EventlyException(nameof(RefundPaymentsForEventCommand), result.Error);
+		}
+	}
 }

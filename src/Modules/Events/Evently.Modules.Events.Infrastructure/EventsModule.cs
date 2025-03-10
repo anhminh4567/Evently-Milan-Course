@@ -1,6 +1,7 @@
 ﻿using System.Reflection;
 using Evently.Common.Application.Clock;
 using Evently.Common.Application.Data;
+using Evently.Common.Application.Messaging;
 using Evently.Common.Infrastructure.Outbox;
 using Evently.Common.Presentation.Endpoints;
 using Evently.Modules.Events.Application;
@@ -49,11 +50,15 @@ public static class EventsModule
         this IServiceCollection services,
         IConfiguration configuration)
     {
+        services.AddDomainEventHandlers();
+
+
+        services.AddInfrastructure(configuration);
         // this is automatic enpoint registration, very cool stuff, check the implementation
         // currently this is registering all endpotn as transient service, then later register
         services.AddEndpoints(Evently.Modules.Events.Presentation.MetaClass.Assembly);
         //
-        services.AddInfrastructure(configuration);
+        
         return services;
     }
     private static IServiceCollection AddInfrastructure(
@@ -81,5 +86,27 @@ public static class EventsModule
 
         //services.AddScoped<IEventsApi,EventsApi>();
 		return services;
+    }
+    private static void AddDomainEventHandlers(this IServiceCollection services)
+    {
+        Type[] domainEventHandlers = Application.MetaClass.EventApplicationAssembly
+            .GetTypes()
+            .Where(t => t.IsAssignableTo(typeof(IDomainEventHandler)))
+            .ToArray();
+
+        foreach (Type domainEventHandler in domainEventHandlers)
+        {
+            services.TryAddScoped(domainEventHandler);
+
+            //Type domainEvent = domainEventHandler
+            //    .GetInterfaces()
+            //    .Single(i => i.IsGenericType)
+            //    .GetGenericArguments()
+            //    .Single();
+
+            //Type closedIdempotentHandler = typeof(IdempotentDomainEventHandler<>).MakeGenericType(domainEvent);
+
+            //services.Decorate(domainEventHandler, closedIdempotentHandler);
+        }
     }
 }
