@@ -32,7 +32,7 @@ internal sealed class GetOrderQueryHandler : IQueryHandler<GetOrderQuery, OrderR
                  oi."OrderId" AS {nameof(OrderItemResponse.OrderId)},
                  oi."TicketTypeId" AS {nameof(OrderItemResponse.TicketTypeId)},
                  oi."Quantity" AS {nameof(OrderItemResponse.Quantity)},
-                 oi."UnitPrice "AS {nameof(OrderItemResponse.UnitPrice)},
+                 oi."UnitPrice" AS {nameof(OrderItemResponse.UnitPrice)},
                  oi."Price" AS {nameof(OrderItemResponse.Price)},
                  oi."Currency" AS {nameof(OrderItemResponse.Currency)}
              FROM ticketing."Orders" o

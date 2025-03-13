@@ -13,8 +13,7 @@ internal class UserRegisteredDomainEventHandler : DomainEventHandler<UserRegiste
     //this is replaced with eventBus
     //private readonly ITicketingApi _ticketingApi;
     private readonly IEventBus _eventBus;
-    private readonly ISender _sender
-        ;
+    private readonly ISender _sender;
 
     public UserRegisteredDomainEventHandler(IEventBus eventBus, ISender sender)
     {

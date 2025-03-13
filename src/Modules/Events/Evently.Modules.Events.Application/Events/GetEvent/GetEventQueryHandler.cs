@@ -6,7 +6,7 @@ using Evently.Common.Application.Data;
 
 namespace Evently.Modules.Events.Application.Events.GetEvent;
 
-public record GetEventQuery(string id) : IQuery<EventResponse>;
+public record GetEventQuery(string EventId) : IQuery<EventResponse>;
 
 
 internal sealed class GetEventQueryHandler : IQueryHandler<GetEventQuery, EventResponse>
@@ -27,7 +27,7 @@ internal sealed class GetEventQueryHandler : IQueryHandler<GetEventQuery, EventR
             $"""
              SELECT
                  e."Id" AS {nameof(EventResponse.Id)},
-                 e."CategoryId "AS {nameof(EventResponse.CategoryId)},
+                 e."CategoryId" AS {nameof(EventResponse.CategoryId)},
                  e."Title" AS {nameof(EventResponse.Title)},
                  e."Description" AS {nameof(EventResponse.Description)},
                  e."Location" AS {nameof(EventResponse.Location)},
@@ -43,8 +43,38 @@ internal sealed class GetEventQueryHandler : IQueryHandler<GetEventQuery, EventR
              WHERE e."Id" = @EventId
              """;
 
-        EventResponse? resultEvent = await connection.QuerySingleOrDefaultAsync(sql, request);
-        return resultEvent;
+        Dictionary<string, EventResponse> eventsDictionary = [];
+        await connection.QueryAsync<EventResponse, TicketTypeResponse?, EventResponse>(
+            sql,
+            (@event, ticketType) =>
+            {
+                if (eventsDictionary.TryGetValue(@event.Id, out EventResponse? existingEvent))
+                {
+                    @event = existingEvent;
+                }
+                else
+                {
+                    eventsDictionary.Add(@event.Id, @event);
+                }
+
+                if (ticketType is not null)
+                {
+                    @event.TicketTypes.Add(ticketType);
+                }
+
+                return @event;
+            },
+            request,
+            splitOn: nameof(TicketTypeResponse.TicketTypeId));
+
+        if (!eventsDictionary.TryGetValue(request.EventId, out EventResponse eventResponse))
+        {
+            return Result.Failure<EventResponse>(EventErrors.NotFound(request.EventId));
+        }
+
+        return eventResponse;
+        //EventResponse? resultEvent = await connection.QuerySingleOrDefaultAsync<EventResponse>(sql, request);
+        //return resultEvent;
     }
 }
 

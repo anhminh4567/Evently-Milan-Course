@@ -60,6 +60,13 @@ public static class AttendanceModule
         services.AddScoped<ITicketRepository, TicketRepository>();
 
         services.AddScoped<IAttendanceContext, AttendanceContext>();
+        services.Configure<OutboxOptions>(configuration.GetSection("Attendance:Outbox"));
+
+        services.ConfigureOptions<ConfigureProcessOutboxJob>();
+
+        services.Configure<InboxOptions>(configuration.GetSection("Attendance:Inbox"));
+
+        services.ConfigureOptions<ConfigureProcessInboxJob>();
     }
 
     public static void ConfigureConsumers(IRegistrationConfigurator registrationConfigurator)

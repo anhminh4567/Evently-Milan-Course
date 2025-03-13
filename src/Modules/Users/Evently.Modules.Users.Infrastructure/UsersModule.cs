@@ -80,7 +80,13 @@ public static class UsersModule
 
         // ------------------------add QUARTZ BG job ------------------------//
         services.Configure<OutboxOptions>(configuration.GetSection("Users:Outbox"));
+
         services.ConfigureOptions<ConfigureProcessOutboxJob>();
+
+        services.Configure<InboxOptions>(configuration.GetSection("Users:Inbox"));
+
+        services.ConfigureOptions<ConfigureProcessInboxJob>();
+
     }
     private static void AddDomainEventHandlers(this IServiceCollection services)
     {

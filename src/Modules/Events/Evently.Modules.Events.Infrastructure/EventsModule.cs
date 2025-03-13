@@ -89,7 +89,15 @@ public static class EventsModule
 		services.AddScoped<ICategoryRepository, CategoryRepository>();
 
         //services.AddScoped<IEventsApi,EventsApi>();
-		return services;
+
+        services.Configure<OutboxOptions>(configuration.GetSection("Events:Outbox"));
+
+        services.ConfigureOptions<ConfigureProcessOutboxJob>();
+
+        services.Configure<InboxOptions>(configuration.GetSection("Events:Inbox"));
+
+        services.ConfigureOptions<ConfigureProcessInboxJob>();
+        return services;
     }
     private static void AddDomainEventHandlers(this IServiceCollection services)
     {

@@ -61,5 +61,10 @@ public sealed class AttendanceDbContext(DbContextOptions<AttendanceDbContext> op
         modelBuilder.ApplyConfiguration(new InboxMessageConfiguration());
         modelBuilder.ApplyConfiguration(new InboxMessageConsumerConfiguration());
         // ---------------- InBOX ----------------------//
+
+        // ---------------- Materializeed view ----------------------//
+        modelBuilder.ApplyConfiguration(new EventStatisticsConfiguration());
+        // ---------------- Materializeed view ----------------------//
+
     }
 }

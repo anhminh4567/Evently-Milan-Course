@@ -21,7 +21,6 @@ using Evently.Modules.Ticketing.Infrastructure.Orders;
 using Evently.Modules.Ticketing.Infrastructure.Outbox;
 using Evently.Modules.Ticketing.Infrastructure.Payments;
 using Evently.Modules.Ticketing.Infrastructure.Tickets;
-using Evently.Modules.Ticketing.Presentation.Customer;
 using Evently.Modules.Users.IntegrationEvents;
 using MassTransit;
 using Microsoft.EntityFrameworkCore;
@@ -61,6 +60,8 @@ public static class TicketingModule
         registrationConfigurator.AddConsumer<IntegrationEventConsumer<UserProfileUpdatedIntegrationEvent>>();
         registrationConfigurator.AddConsumer<IntegrationEventConsumer<EventPublishedIntegrationEvent>>();
         registrationConfigurator.AddConsumer<IntegrationEventConsumer<TicketTypePriceChangedIntegrationEvent>>();
+        registrationConfigurator.AddConsumer<IntegrationEventConsumer<EventCancellationStartedIntegrationEvent>>();
+
     }
 
     // ---------------------------- ADD CONSUMER ---------------------------- //
@@ -92,6 +93,14 @@ public static class TicketingModule
         services.AddScoped<IUnitOfWork>(sp => sp.GetRequiredService<TicketingDbContext>());
 
         services.AddScoped<ICustomerContext, CustomerContext>();
+
+        services.Configure<OutboxOptions>(configuration.GetSection("Ticketing:Outbox"));
+
+        services.ConfigureOptions<ConfigureProcessOutboxJob>();
+
+        services.Configure<InboxOptions>(configuration.GetSection("Ticketing:Inbox"));
+
+        services.ConfigureOptions<ConfigureProcessInboxJob>();
         return services;
     }
     private static void AddDomainEventHandlers(this IServiceCollection services)
