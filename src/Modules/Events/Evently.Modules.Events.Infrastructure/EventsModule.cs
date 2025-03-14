@@ -19,8 +19,10 @@ using Evently.Modules.Events.Infrastructure.Outbox;
 using Evently.Modules.Events.Infrastructure.TicketTypes;
 using Evently.Modules.Events.Presentation.Categories;
 using Evently.Modules.Events.Presentation.Events;
+using Evently.Modules.Events.Presentation.Events.CancelEventSaga;
 using Evently.Modules.Events.Presentation.TicketTypes;
 using FluentValidation;
+using MassTransit;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Migrations;
@@ -64,6 +66,14 @@ public static class EventsModule
         //
         
         return services;
+    }
+    public static Action<IRegistrationConfigurator> ConfigureConsumers(IConfiguration configuration)
+    {
+        // redis persitance, from Common.Infrastructure
+        // you can change to EFCore or RabbitMQ later
+        return registrationConfigurator =>  
+                registrationConfigurator.AddSagaStateMachine<CancelEventSaga, CancelEventState>()
+                .RedisRepository(configuration.GetConnectionString("CachingService"));
     }
     private static IServiceCollection AddInfrastructure(
        this IServiceCollection services,

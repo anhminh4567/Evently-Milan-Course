@@ -51,7 +51,7 @@ public sealed class Payment : Entity
         if (AmountRefunded + refundAmount > Amount)
             return Result.Failure(PaymentErrors.NotEnoughFunds);
         
-
+        AmountRefunded ??= 0;
         AmountRefunded += refundAmount;
 
         if (Amount == AmountRefunded)

@@ -87,7 +87,6 @@ public static class InfrastructureConfiguration
             options.WaitForJobsToComplete = true;
         });
         //------------------------------- QUARTZ for BG Job -------------------------------//
-
         return services;
     }
 }

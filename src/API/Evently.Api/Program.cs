@@ -62,6 +62,7 @@ builder.Services.AddApplication(
     Evently.Modules.Attendance.Application.AssemblyReference.Assembly,
     ]);
 builder.Services.AddInfrastructure(builder.Configuration, [
+    Evently.Modules.Events.Infrastructure.EventsModule.ConfigureConsumers(builder.Configuration), // config consumer delegate from EventsModule
     Evently.Modules.Ticketing.Infrastructure.TicketingModule.ConfigureConsumers, // config consumer delegate from TicketingModule
     Evently.Modules.Attendance.Infrastructure.AttendanceModule.ConfigureConsumers,
     ]);
