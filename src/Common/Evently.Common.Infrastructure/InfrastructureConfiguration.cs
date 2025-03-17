@@ -88,5 +88,6 @@ public static class InfrastructureConfiguration
         });
         //------------------------------- QUARTZ for BG Job -------------------------------//
         return services;
+        
     }
 }
