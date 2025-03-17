@@ -21,7 +21,7 @@ internal sealed class GetCustomerByIdQueryHandler(IDbConnectionFactory dbConnect
                  "Email" AS {nameof(CustomerResponse.Email)},
                  "FirstName" AS {nameof(CustomerResponse.FirstName)},
                  "LastName" AS {nameof(CustomerResponse.LastName)}
-             FROM ticketing.Customers
+             FROM ticketing."Customers"
              WHERE "Id" = @CustomerId
              """;
 
