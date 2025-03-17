@@ -23,7 +23,7 @@ namespace Evently.Common.Infrastructure;
 
 public static class InfrastructureConfiguration
 {
-    public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration , Action<IRegistrationConfigurator>[] eventConsumerRegistration)
+    public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration, Action<IRegistrationConfigurator>[] eventConsumerRegistration)
     {
         string databaseConnectionString = configuration.GetConnectionString("Database")!;
         string cacheConnectionString = configuration.GetConnectionString("CachingService");
@@ -39,7 +39,7 @@ public static class InfrastructureConfiguration
         services.AddSingleton(dataSource);
         services.AddScoped<IDbConnectionFactory, DbConnectionFactory>();
         services.TryAddSingleton<IDateTimeProvider, DateTimeProvider>();
-        services.AddScoped(typeof(IBaseRepository<>),typeof(BaseRepository<>));
+        services.AddScoped(typeof(IBaseRepository<>), typeof(BaseRepository<>));
 
         services.TryAddSingleton<ICacheService, CacheService>();
         IConnectionMultiplexer connectionMultiplexer = ConnectionMultiplexer.Connect(cacheConnectionString, config =>
@@ -67,11 +67,11 @@ public static class InfrastructureConfiguration
         {
             // consumer is not in this assembly
             // this is passed down from Event.Api
-            foreach( var moduleConsumerRegister  in eventConsumerRegistration)
+            foreach (var moduleConsumerRegister in eventConsumerRegistration)
             {
                 moduleConsumerRegister(config);
             }
-            config.UsingInMemory((ctx,cfg) => 
+            config.UsingInMemory((ctx, cfg) =>
             {
                 cfg.ConfigureEndpoints(ctx);
             });
@@ -81,13 +81,23 @@ public static class InfrastructureConfiguration
 
 
         //------------------------------- QUARTZ for BG Job -------------------------------//
-        services.AddQuartz();
+        services.AddQuartz(configurator =>
+        {
+            //---------------this some high stuff shit--------------
+            // since we run test in the integration test, which might spinup multiple instance of this applicatio, API
+            // so quartz , without changing name and id, will spawn many scheduler that have the same id, 
+            // so quartz will throw error and fail
+
+            var scheduler = Guid.NewGuid();
+            configurator.SchedulerId = $"default-id-{scheduler}";
+            configurator.SchedulerName = $"default-name-{scheduler}";
+        });
         services.AddQuartzHostedService(options =>
         {
             options.WaitForJobsToComplete = true;
         });
         //------------------------------- QUARTZ for BG Job -------------------------------//
         return services;
-        
+
     }
 }

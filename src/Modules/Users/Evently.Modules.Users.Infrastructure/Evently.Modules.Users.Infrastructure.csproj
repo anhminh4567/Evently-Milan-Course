@@ -9,5 +9,8 @@
   <ItemGroup>
     <Folder Include="Database\Migrations\" />
   </ItemGroup>
-
+	<ItemGroup>
+		<InternalsVisibleTo Include="Evently.Modules.Users.IntegrationTests" />
+		<InternalsVisibleTo Include="Evently.IntegrationTests" />
+	</ItemGroup>
 </Project>
