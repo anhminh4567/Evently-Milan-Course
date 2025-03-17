@@ -2,4 +2,4 @@
 
 namespace Evently.Modules.Attendance.Application.Attendees.GetAttendee;
 
-public sealed record GetAttendeeQuery(Guid CustomerId) : IQuery<AttendeeResponse>;
+public sealed record GetAttendeeQuery(string CustomerId) : IQuery<AttendeeResponse>;

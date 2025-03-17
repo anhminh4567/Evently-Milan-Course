@@ -7,8 +7,7 @@ using Evently.Modules.Attendance.Domain.Attendees;
 
 namespace Evently.Modules.Attendance.Application.Attendees.GetAttendee;
 
-internal sealed class GetAttendeeQueryQueryHandler(IDbConnectionFactory dbConnectionFactory)
-    : IQueryHandler<GetAttendeeQuery, AttendeeResponse>
+internal sealed class GetAttendeeQueryQueryHandler(IDbConnectionFactory dbConnectionFactory): IQueryHandler<GetAttendeeQuery, AttendeeResponse>
 {
     public async Task<Result<AttendeeResponse>> Handle(GetAttendeeQuery request, CancellationToken cancellationToken)
     {
@@ -17,12 +16,12 @@ internal sealed class GetAttendeeQueryQueryHandler(IDbConnectionFactory dbConnec
         const string sql =
             $"""
              SELECT
-                 id AS {nameof(AttendeeResponse.Id)},
-                 email AS {nameof(AttendeeResponse.Email)},
-                 first_name AS {nameof(AttendeeResponse.FirstName)},
-                 last_name AS {nameof(AttendeeResponse.LastName)}
-             FROM attendance.attendees
-             WHERE id = @CustomerId
+                 "Id" AS {nameof(AttendeeResponse.Id)},
+                 "Email" AS {nameof(AttendeeResponse.Email)},
+                 "FirstName" AS {nameof(AttendeeResponse.FirstName)},
+                 "LastName" AS {nameof(AttendeeResponse.LastName)}
+             FROM attendance."Attendees"
+             WHERE "Id" = @CustomerId
              """;
 
         AttendeeResponse? customer = await connection.QuerySingleOrDefaultAsync<AttendeeResponse>(sql, request);

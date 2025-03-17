@@ -26,7 +26,7 @@ public sealed class AddItemToCartTests : BaseIntegrationTest
             Faker.Name.FirstName(),
             Faker.Name.LastName());
 
-        Result<Guid> userResult = await Sender.Send(command);
+        Result<string> userResult = await Sender.Send(command);
 
         userResult.IsSuccess.Should().BeTrue();
 
@@ -46,9 +46,9 @@ public sealed class AddItemToCartTests : BaseIntegrationTest
 
         // Add item to cart
         CustomerResponse customer = customerResult.Value;
-        var ticketTypeId = Guid.NewGuid();
+        var ticketTypeId = Guid.NewGuid().ToString();
 
-        await Sender.CreateEventAsync(Guid.NewGuid(), ticketTypeId, Quantity);
+        await Sender.CreateEventAsync(Guid.NewGuid().ToString(), ticketTypeId, Quantity);
 
         Result result = await Sender.Send(new AddItemToCartCommand(customer.Id, ticketTypeId, Quantity));
 

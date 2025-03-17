@@ -22,14 +22,21 @@ public class IntegrationTestWebAppFactory : WebApplicationFactory<Program>, IAsy
         .WithImage("redis:latest")
         .Build();
 
+    //private readonly KeycloakContainer _keycloakContainer = new KeycloakBuilder()
+    //    .WithImage("quay.io/keycloak/keycloak:latest")
+    //    .WithResourceMapping(
+    //        new FileInfo("evently-realm-export.json"),
+    //        new FileInfo("/opt/keycloak/data/import/realm.json"))
+    //    .WithCommand("--import-realm")
+    //    .Build();
     private readonly KeycloakContainer _keycloakContainer = new KeycloakBuilder()
         .WithImage("quay.io/keycloak/keycloak:latest")
         .WithResourceMapping(
-            new FileInfo("evently-realm-export.json"),
-            new FileInfo("/opt/keycloak/data/import/realm.json"))
+        new FileInfo("evently-realm-export.json"),
+        new FileInfo("/opt/keycloak/data/import/realm.json"))
         .WithCommand("--import-realm")
+        .WithName("test-keycloak-" + Guid.NewGuid().ToString())
         .Build();
-
     protected override void ConfigureWebHost(IWebHostBuilder builder)
     {
         Environment.SetEnvironmentVariable("ConnectionStrings:Database", _dbContainer.GetConnectionString());
@@ -70,15 +77,54 @@ public class IntegrationTestWebAppFactory : WebApplicationFactory<Program>, IAsy
 
     public async Task InitializeAsync()
     {
-        await _dbContainer.StartAsync();
-        await _redisContainer.StartAsync();
-        await _keycloakContainer.StartAsync();
+
+        try
+        {
+            Console.WriteLine("Starting PostgreSQL container...");
+            await _dbContainer.StartAsync();
+            Console.WriteLine("PostgreSQL container started.");
+
+            Console.WriteLine("Starting Redis container...");
+            await _redisContainer.StartAsync();
+            Console.WriteLine("Redis container started.");
+
+            Console.WriteLine("Starting Keycloak container...");
+            await _keycloakContainer.StartAsync();
+            Console.WriteLine("Keycloak container started.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error starting containers: {ex.Message}");
+            throw;
+        }
+        //await _dbContainer.StartAsync();
+        //await _redisContainer.StartAsync();
+        //await _keycloakContainer.StartAsync();
     }
 
     public new async Task DisposeAsync()
     {
-        await _dbContainer.StopAsync();
-        await _redisContainer.StopAsync();
-        await _keycloakContainer.StopAsync();
+        try
+        {
+            Console.WriteLine("Stopping PostgreSQL container...");
+            await _dbContainer.StopAsync();
+            Console.WriteLine("PostgreSQL container stopped.");
+
+            Console.WriteLine("Stopping Redis container...");
+            await _redisContainer.StopAsync();
+            Console.WriteLine("Redis container stopped.");
+
+            Console.WriteLine("Stopping Keycloak container...");
+            await _keycloakContainer.StopAsync();
+            Console.WriteLine("Keycloak container stopped.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error stopping containers: {ex.Message}");
+            throw;
+        }
+        //await _dbContainer.StopAsync();
+        //await _redisContainer.StopAsync();
+        //await _keycloakContainer.StopAsync();
     }
 }
