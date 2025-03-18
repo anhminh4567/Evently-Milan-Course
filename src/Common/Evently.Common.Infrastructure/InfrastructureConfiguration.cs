@@ -27,13 +27,17 @@ namespace Evently.Common.Infrastructure;
 
 public static class InfrastructureConfiguration
 {
-	public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration, Action<IRegistrationConfigurator>[] eventConsumerRegistration)
+    public const string ServiceName = "Evently.Api";
+    public static IServiceCollection AddInfrastructure(this IServiceCollection services,
+        IConfiguration configuration,
+        RabbitMqSettings rabbitMqSettings,
+        Action<IRegistrationConfigurator,string>[] eventConsumerRegistration)
 	{
 		string databaseConnectionString = configuration.GetConnectionString("Database")!;
 		string cacheConnectionString = configuration.GetConnectionString("CachingService");
-
-		//------------------------------- Auth section -------------------------------
-		services.AddAuthenticationInternal(configuration);
+        //string messaggeQueueConnectionString = configuration.GetConnectionString("Queue");
+        //------------------------------- Auth section -------------------------------
+        services.AddAuthenticationInternal(configuration);
 		//------------------------------- Auth section -------------------------------
 		//------------------------------- Authorization section -------------------------------
 		services.AddAuthorizationInternal();
@@ -71,15 +75,29 @@ public static class InfrastructureConfiguration
 		{
 			// consumer is not in this assembly
 			// this is passed down from Event.Api
-			foreach (var moduleConsumerRegister in eventConsumerRegistration)
+            // instance id here simply mean adding the extra identifider to the queue and handler name
+            // since whe moving to microservice, shit get complicateed
+            string instanceId = ServiceName.ToLowerInvariant().Replace(".", "-");
+
+            foreach (var moduleConsumerRegister in eventConsumerRegistration)
 			{
-				moduleConsumerRegister(config);
+				moduleConsumerRegister(config,instanceId);
 			}
-			config.UsingInMemory((ctx, cfg) =>
-			{
-				cfg.ConfigureEndpoints(ctx);
-			});
-		});
+            //config.UsingInMemory((ctx, cfg) =>
+            //{
+            //	cfg.ConfigureEndpoints(ctx);
+            //});
+            config.SetKebabCaseEndpointNameFormatter();
+            config.UsingRabbitMq((ctx, cfg) =>
+            {
+                cfg.Host(new Uri(rabbitMqSettings.Host),config =>
+                {
+                    config.Username(rabbitMqSettings.Username);
+                    config.Password(rabbitMqSettings.Password);
+                });
+                cfg.ConfigureEndpoints(ctx);
+            });
+        });
 		//------------------------------- Event buss section -------------------------------
 
 
@@ -108,7 +126,7 @@ public static class InfrastructureConfiguration
 		//------------------------------- OpenTelemetry SERVICE -------------------------------//
 		services
 			.AddOpenTelemetry()
-			.ConfigureResource(resource => resource.AddService("Evently.Api"))
+			.ConfigureResource(resource => resource.AddService(ServiceName))
 			.WithTracing(tracing =>
 			{
 				tracing

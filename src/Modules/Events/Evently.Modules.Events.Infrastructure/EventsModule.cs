@@ -67,12 +67,14 @@ public static class EventsModule
         
         return services;
     }
-    public static Action<IRegistrationConfigurator> ConfigureConsumers(IConfiguration configuration)
+    public static Action<IRegistrationConfigurator,string> ConfigureConsumers(IConfiguration configuration)
     {
         // redis persitance, from Common.Infrastructure
         // you can change to EFCore or RabbitMQ later
-        return registrationConfigurator =>  
-                registrationConfigurator.AddSagaStateMachine<CancelEventSaga, CancelEventState>()
+        return (registrationConfigurator ,instanceId) =>  
+                registrationConfigurator
+                .AddSagaStateMachine<CancelEventSaga, CancelEventState>()
+                .Endpoint(c => c.InstanceId = instanceId)
                 .RedisRepository(configuration.GetConnectionString("CachingService"));
     }
     private static IServiceCollection AddInfrastructure(

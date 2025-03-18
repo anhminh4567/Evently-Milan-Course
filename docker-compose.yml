@@ -51,6 +51,21 @@ services:
       - 4318:4318 # default port for the OpenTelemetry HTTP receiver
       - 16686:16686 # where UI is 
 
+  evently.queue:
+    image: rabbitmq:management-alpine
+    container_name: Evently.Queue
+    hostname: evently-queue
+    volumes:
+        - ./.containers/queue/data/:/var/lib/rabbitmq
+        - ./.containers/queue/log/:/var/log/rabbitmq
+    environment:
+        RABBITMQ_DEFAULT_USER: guest
+        RABBITMQ_DEFAULT_PASS: guest
+    ports:
+      - 5672:5672
+      - 15672:15672
+
+
   evently.api:
     image: ${DOCKER_REGISTRY-}eventlyapi
     container_name: Evently.Api
@@ -66,3 +81,4 @@ services:
     ports:
       - 5000:8080
       - 5001:8081
+  

@@ -1,8 +1,10 @@
 using Evently.Api.Extensions;
 using Evently.Api.Middleware;
 using Evently.Api.Middlewares;
+using Evently.Api.OpenTelemetry;
 using Evently.Common.Application;
 using Evently.Common.Infrastructure;
+using Evently.Common.Infrastructure.EventBuses;
 using Evently.Common.Presentation.Endpoints;
 using Evently.Modules.Attendance.Infrastructure;
 using Evently.Modules.Events.Infrastructure;
@@ -61,17 +63,23 @@ public partial class Program
         // --------------------------- Register commmon project first ---------------------------//
         // include setting up some services like event bus, consumer from other modules, 
         // after this will register other modules later
+        var rabbitMqSettings = new RabbitMqSettings()
+        {
+            Host = builder.Configuration.GetConnectionString("Queue"),
+        };
+
+
         builder.Services.AddApplication(
             [Evently.Modules.Events.Application.MetaClass.EventApplicationAssembly,
-    Evently.Modules.Users.Application.AssemblyReference.Assembly,
-    Evently.Modules.Ticketing.Application.AssemblyReference.Assembly,
-    Evently.Modules.Attendance.Application.AssemblyReference.Assembly,
-    ]);
-        builder.Services.AddInfrastructure(builder.Configuration, [
-            EventsModule.ConfigureConsumers(builder.Configuration), // config consumer delegate from EventsModule
-    TicketingModule.ConfigureConsumers, // config consumer delegate from TicketingModule
-    AttendanceModule.ConfigureConsumers,
-    ]);
+            Evently.Modules.Users.Application.AssemblyReference.Assembly,
+            Evently.Modules.Ticketing.Application.AssemblyReference.Assembly,
+            Evently.Modules.Attendance.Application.AssemblyReference.Assembly,
+         ]);
+        builder.Services.AddInfrastructure(builder.Configuration, rabbitMqSettings, [
+                EventsModule.ConfigureConsumers(builder.Configuration), // config consumer delegate from EventsModule
+                TicketingModule.ConfigureConsumers, // config consumer delegate from TicketingModule
+                AttendanceModule.ConfigureConsumers,
+         ]);
         // --------------------------- Register commmon project first ---------------------------//
 
         //--------------------------------------------------------------------------------------------------------------------------------//
