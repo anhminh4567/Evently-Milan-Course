@@ -1,4 +1,5 @@
 using Evently.Api.Extensions;
+using Evently.Api.Middleware;
 using Evently.Api.Middlewares;
 using Evently.Common.Application;
 using Evently.Common.Infrastructure;
@@ -54,6 +55,7 @@ public partial class Program
             config.ReadFrom.Configuration(builder.Configuration);
         }, false, false);
         builder.Services.AddScoped<CustomExceptionHandlerMiddleware>();
+        builder.Services.AddScoped<LogContextTraceLoggingMiddleware>();
         builder.Services.AddProblemDetails();
         //builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
         // --------------------------- Register commmon project first ---------------------------//
@@ -93,6 +95,10 @@ public partial class Program
         }
         // the position of useSerilogRequestLoggin() does have impact, correctly placing will log request process time correectly, 
         // more efficent and less noise ( or unecessary log ,like useStaticFile() handler )
+
+        // -----------------------------------Add tracing and logging context to Serilog for tracing to Jaeger and Otlp--------------------------------------------//
+        app.UseMiddleware<LogContextTraceLoggingMiddleware>();
+
         app.UseSerilogRequestLogging();
         //app.UseExceptionHandler("/error");
         app.UseMiddleware<CustomExceptionHandlerMiddleware>();

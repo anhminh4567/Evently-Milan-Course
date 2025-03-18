@@ -43,7 +43,13 @@ services:
     ports:
       - 18080:8080
       - 9000:9000 # if you want to expose health check locally
- 
+  evently.jaeger:
+    image: jaegertracing/all-in-one:latest
+    container_name: Evently.Jaeger
+    ports:
+      - 4317:4317 # default port for the OpenTelemetry gRPC receiver.
+      - 4318:4318 # default port for the OpenTelemetry HTTP receiver
+      - 16686:16686 # where UI is 
 
   evently.api:
     image: ${DOCKER_REGISTRY-}eventlyapi
@@ -55,6 +61,8 @@ services:
       - evently.database
       - evently.seq
       - evently.identity
+      - evently.redis
+      - evently.jaeger
     ports:
       - 5000:8080
       - 5001:8081

@@ -1,4 +1,5 @@
-﻿using Evently.Common.Domain;
+﻿using System.Diagnostics;
+using Evently.Common.Domain;
 using MediatR;
 using Microsoft.Extensions.Logging;
 using Serilog.Context;
@@ -23,6 +24,12 @@ internal sealed class RequestLoggingPipelineBehavior<TRequest, TResponse>: IPipe
     {
         string moduleName = GetModuleName(typeof(TRequest).FullName!);
         string requestName = typeof(TRequest).Name;
+        //------------------------------for tracing Otlp Purpose ------------------------------------------
+        Activity.Current?.AddTag("request.module", moduleName);
+        Activity.Current?.AddTag("request.name", requestName);
+        // include these 2 tags when traces to Otpl
+        //------------------------------for tracing Otlp Purpose ------------------------------------------
+
 
         using (LogContext.PushProperty("Module", moduleName))
         {
