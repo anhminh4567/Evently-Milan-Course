@@ -8,11 +8,11 @@ using Evently.Common.Infrastructure.EventBuses;
 using Evently.Common.Presentation.Endpoints;
 using Evently.Modules.Attendance.Infrastructure;
 using Evently.Modules.Events.Infrastructure;
-using Evently.Modules.Ticketing.Infrastructure;
+//using Evently.Modules.Ticketing.Infrastructure;
 using Evently.Modules.Users.Infrastructure;
 using Microsoft.OpenApi.Models;
 using Serilog;
-
+namespace Evently.Api;
 public partial class Program
 {
     private static void Main(string[] args)
@@ -72,22 +72,25 @@ public partial class Program
         builder.Services.AddApplication(
             [Evently.Modules.Events.Application.MetaClass.EventApplicationAssembly,
             Evently.Modules.Users.Application.AssemblyReference.Assembly,
-            Evently.Modules.Ticketing.Application.AssemblyReference.Assembly,
+            //Evently.Modules.Ticketing.Application.AssemblyReference.Assembly,
+            // we move this module to seperate api, ( as a microservice)
             Evently.Modules.Attendance.Application.AssemblyReference.Assembly,
          ]);
-        builder.Services.AddInfrastructure(builder.Configuration, rabbitMqSettings, [
+        builder.Services.AddInfrastructure(builder.Configuration, rabbitMqSettings,DiagnosticsConfig.ServiceName, [
                 EventsModule.ConfigureConsumers(builder.Configuration), // config consumer delegate from EventsModule
-                TicketingModule.ConfigureConsumers, // config consumer delegate from TicketingModule
+                //TicketingModule.ConfigureConsumers, // config consumer delegate from TicketingModule
                 AttendanceModule.ConfigureConsumers,
+                UsersModule.ConfigureConsumers // config consumer delegate from UsersModule
          ]);
         // --------------------------- Register commmon project first ---------------------------//
 
         //--------------------------------------------------------------------------------------------------------------------------------//
-        builder.Configuration.AddModulesAppsettings(["events", "users", "attendance", "ticketing"]);
+        builder.Configuration.AddModulesAppsettings(["events", "users", "attendance",]);
+        //"ticketing"
 
         builder.Services.AddEventsModule(builder.Configuration);
         builder.Services.AddUsersModule(builder.Configuration);
-        builder.Services.AddTicketingModule(builder.Configuration);
+        //builder.Services.AddTicketingModule(builder.Configuration);
         builder.Services.AddAttendanceModule(builder.Configuration);
 
         // add appsettings of modules

@@ -27,10 +27,10 @@ namespace Evently.Common.Infrastructure;
 
 public static class InfrastructureConfiguration
 {
-    public const string ServiceName = "Evently.Api";
     public static IServiceCollection AddInfrastructure(this IServiceCollection services,
         IConfiguration configuration,
         RabbitMqSettings rabbitMqSettings,
+        string serviceName,
         Action<IRegistrationConfigurator,string>[] eventConsumerRegistration)
 	{
 		string databaseConnectionString = configuration.GetConnectionString("Database")!;
@@ -77,7 +77,7 @@ public static class InfrastructureConfiguration
 			// this is passed down from Event.Api
             // instance id here simply mean adding the extra identifider to the queue and handler name
             // since whe moving to microservice, shit get complicateed
-            string instanceId = ServiceName.ToLowerInvariant().Replace(".", "-");
+            string instanceId = serviceName.ToLowerInvariant().Replace(".", "-");
 
             foreach (var moduleConsumerRegister in eventConsumerRegistration)
 			{
@@ -126,7 +126,7 @@ public static class InfrastructureConfiguration
 		//------------------------------- OpenTelemetry SERVICE -------------------------------//
 		services
 			.AddOpenTelemetry()
-			.ConfigureResource(resource => resource.AddService(ServiceName))
+			.ConfigureResource(resource => resource.AddService(serviceName))
 			.WithTracing(tracing =>
 			{
 				tracing

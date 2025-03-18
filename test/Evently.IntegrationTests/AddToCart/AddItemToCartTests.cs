@@ -7,52 +7,54 @@ using FluentAssertions;
 
 namespace Evently.IntegrationTests.AddToCart;
 
+// this test is removed, because it is entirely dependent on the ticketing module
+// and we are moving it to microservicees
 public sealed class AddItemToCartTests : BaseIntegrationTest
 {
-    private const decimal Quantity = 10;
+    //private const decimal Quantity = 10;
 
     public AddItemToCartTests(IntegrationTestWebAppFactory factory)
         : base(factory)
     {
     }
 
-    [Fact]
-    public async Task Customer_ShouldBeAbleTo_AddItemToCart()
-    {
-        // Register user
-        var command = new RegisterUserCommand(
-            Faker.Internet.Email(),
-            Faker.Internet.Password(6),
-            Faker.Name.FirstName(),
-            Faker.Name.LastName());
+    //[Fact]
+    //public async Task Customer_ShouldBeAbleTo_AddItemToCart()
+    //{
+    //    // Register user
+    //    var command = new RegisterUserCommand(
+    //        Faker.Internet.Email(),
+    //        Faker.Internet.Password(6),
+    //        Faker.Name.FirstName(),
+    //        Faker.Name.LastName());
 
-        Result<string> userResult = await Sender.Send(command);
+    //    Result<string> userResult = await Sender.Send(command);
 
-        userResult.IsSuccess.Should().BeTrue();
+    //    userResult.IsSuccess.Should().BeTrue();
 
-        // Get customer
-        Result<CustomerResponse> customerResult = await Poller.WaitAsync(
-            TimeSpan.FromSeconds(15),
-            async () =>
-            {
-                var query = new GetCustomerQuery(userResult.Value);
+    //    // Get customer
+    //    Result<CustomerResponse> customerResult = await Poller.WaitAsync(
+    //        TimeSpan.FromSeconds(15),
+    //        async () =>
+    //        {
+    //            var query = new GetCustomerQuery(userResult.Value);
 
-                Result<CustomerResponse> customerResult = await Sender.Send(query);
+    //            Result<CustomerResponse> customerResult = await Sender.Send(query);
 
-                return customerResult;
-            });
+    //            return customerResult;
+    //        });
 
-        customerResult.IsSuccess.Should().BeTrue();
+    //    customerResult.IsSuccess.Should().BeTrue();
 
-        // Add item to cart
-        CustomerResponse customer = customerResult.Value;
-        var ticketTypeId = Guid.NewGuid().ToString();
+    //    // Add item to cart
+    //    CustomerResponse customer = customerResult.Value;
+    //    var ticketTypeId = Guid.NewGuid().ToString();
 
-        await Sender.CreateEventAsync(Guid.NewGuid().ToString(), ticketTypeId, Quantity);
+    //    await Sender.CreateEventAsync(Guid.NewGuid().ToString(), ticketTypeId, Quantity);
 
-        Result result = await Sender.Send(new AddItemToCartCommand(customer.Id, ticketTypeId, Quantity));
+    //    Result result = await Sender.Send(new AddItemToCartCommand(customer.Id, ticketTypeId, Quantity));
 
-        // Assert
-        result.IsSuccess.Should().BeTrue();
-    }
+    //    // Assert
+    //    result.IsSuccess.Should().BeTrue();
+    //}
 }

@@ -12,6 +12,8 @@ using Evently.Modules.Users.Infrastructure.Identity;
 using Evently.Modules.Users.Infrastructure.Inbox;
 using Evently.Modules.Users.Infrastructure.Outbox;
 using Evently.Modules.Users.Infrastructure.Users;
+using Evently.Modules.Users.Presentation.Users;
+using MassTransit;
 using MassTransit.Configuration;
 using MassTransit.Futures.Contracts;
 using Microsoft.EntityFrameworkCore;
@@ -41,7 +43,11 @@ public static class UsersModule
         
         return services;
     }
-
+    public static void ConfigureConsumers(IRegistrationConfigurator registrationConfigurator, string instanceId)
+    {
+        registrationConfigurator.AddConsumer<GetUserPermissionRequestConsumer>()
+            .Endpoint(e => e.InstanceId = instanceId);
+    }
     private static void AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
     {
         services.Configure<KeyCloakOptions>(configuration.GetSection("Users:KeyCloak"));

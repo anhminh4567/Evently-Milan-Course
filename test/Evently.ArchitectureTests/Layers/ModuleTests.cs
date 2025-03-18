@@ -7,8 +7,8 @@ using System.Threading.Tasks;
 using Evently.ArchitectureTests.Abstractions;
 using Evently.Modules.Events.Domain.Events;
 using Evently.Modules.Events.Infrastructure;
-using Evently.Modules.Ticketing.Domain.Orders;
-using Evently.Modules.Ticketing.Infrastructure;
+//using Evently.Modules.Ticketing.Domain.Orders;
+//using Evently.Modules.Ticketing.Infrastructure;
 using Evently.Modules.Users.Domain.Users;
 using Evently.Modules.Users.Infrastructure;
 using NetArchTest.Rules;
@@ -38,28 +38,7 @@ public class ModuleTests : BaseTest
             .GetResult()
             .ShouldBeSuccessFul();
     }
-    [Fact]
-    public void TicketingModules_ShouldNotHaveDependenciesOn_AnyOtherModules()
-    {
-        string[] otherModules = [UsersNamespace, EventsNamespace, AttendanceNamespace];
-        string[] integrationEventModules = [EventsIntegrationEventsNamespace, UsersIntegrationEventsNamespace, AttendanceIntegrationEventsNamespace];
-
-        var ticketingAssemblies = new List<Assembly>()
-        {
-            typeof(Order).Assembly ,// domain
-            Modules.Ticketing.Application.AssemblyReference.Assembly,
-            Modules.Ticketing.Presentation.AssemblyReference.Assembly,
-            typeof(TicketingModule).Assembly
-        };
-        // test here
-        Types.InAssemblies(ticketingAssemblies)
-            .That()
-            .DoNotHaveDependencyOnAny(integrationEventModules)
-            .Should()
-            .NotHaveDependencyOnAny(otherModules)
-            .GetResult()
-            .ShouldBeSuccessFul();
-    }
+   
     [Fact]
     public void EventsModules_ShouldNotHaveDependenciesOn_AnyOtherModules()
     {
